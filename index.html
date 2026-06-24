@@ -502,8 +502,62 @@
         </div>
         <div class="field col-5">
           <label>Vendedor <span class="req">*</span></label>
-          <input id="f_vendedor" type="text" placeholder="Nome do vendedor" autocomplete="off" list="dl_vendedores">
-          <datalist id="dl_vendedores"></datalist>
+          <select id="f_vendedor">
+            <option value="">Selecione o vendedor…</option>
+            <option>Alex Oliveira</option>
+            <option>Ana Cristina Pires Viana</option>
+            <option>Anderson José Bittencourt Moraes</option>
+            <option>Andreia Ribeiro da Matta</option>
+            <option>Bruna Roberta Bicalho de Oliveira</option>
+            <option>Chaves</option>
+            <option>Davi Almeida Silva</option>
+            <option>Dayanne Vitoria de Vargas Correia</option>
+            <option>Debora Fitz</option>
+            <option>Eder Gomes de Souza</option>
+            <option>Eduardo Marcos Aguiar Junior</option>
+            <option>Edvaldo Barbosa De Carvalho</option>
+            <option>Elton Paulo Bento</option>
+            <option>Filipe Barreiros Pego</option>
+            <option>Gabriela Nassif Dias Ribeiro</option>
+            <option>Glauber Santos</option>
+            <option>Gustavo Ferreira Costa</option>
+            <option>Helio Martins Deziderio</option>
+            <option>Hernani Batista Quinário</option>
+            <option>Heverton Felipe Bello Teixeira Chaves</option>
+            <option>Inativos</option>
+            <option>Jeremias De Souza Biliatto Junior</option>
+            <option>Joaquim Lopes Rodrigues Filho</option>
+            <option>Josiane Faria Santos de Castro</option>
+            <option>Kalinca Rafaela Cruz Menegati</option>
+            <option>Kamila Ferreira Pontes</option>
+            <option>Kamila Santos Natividade</option>
+            <option>Kaue Alinson Pereira De Toledo Arantes</option>
+            <option>Laleska Olivieri Araújo</option>
+            <option>Leonardo de Souza Ferreira</option>
+            <option>Lincoln Garcia Dos Reis</option>
+            <option>Luciane Carvalho</option>
+            <option>Marcello Fernando Aragão</option>
+            <option>Marcelo Pereira Lima</option>
+            <option>Marco Antonio de Souza Ferreira</option>
+            <option>Marcos Vinicius Texeira Chaves</option>
+            <option>Nayara Regina Nunes Brunes</option>
+            <option>Patrick Emanuel Loro Da Silva</option>
+            <option>Pedro Fernandes</option>
+            <option>Pedro Guilherme Salvador Muniz</option>
+            <option>Richard Sanches</option>
+            <option>Rodrigo Aparecido Garcia</option>
+            <option>Rodrigo Vitica</option>
+            <option>Rosangela Selini</option>
+            <option>Rutchelly Cabral de Queiroz</option>
+            <option>Tainara Macarini</option>
+            <option>Telis Cardoso Galhardo de Figueiredo</option>
+            <option>Thane Oliveira</option>
+            <option>Thiago Henrique Dos Santos</option>
+            <option>Tiago Barbosa Favaro</option>
+            <option>Tuany Trindade</option>
+            <option>Vinicius Henrique Gualberto Dutra</option>
+            <option>William Kimura Ferretti</option>
+          </select>
         </div>
 
         <div class="field col-12">
@@ -660,7 +714,62 @@
         <div class="field col-3"><label>Frete (R$) <span class="req">*</span></label><div class="money-prefix"><span>R$</span><input id="e_frete" type="text" inputmode="decimal"></div></div>
         <div class="field col-12"><label>Cliente <span class="req">*</span></label><input id="e_cliente" type="text"></div>
         <div class="field col-6"><label>Transportadora <span class="req">*</span></label><input id="e_transp" type="text"></div>
-        <div class="field col-6"><label>Vendedor <span class="req">*</span></label><input id="e_vendedor" type="text" list="dl_vendedores_all"><datalist id="dl_vendedores_all"></datalist></div>
+        <div class="field col-6"><label>Vendedor <span class="req">*</span></label><select id="e_vendedor">
+            <option value="">Selecione o vendedor…</option>
+            <option>Alex Oliveira</option>
+            <option>Ana Cristina Pires Viana</option>
+            <option>Anderson José Bittencourt Moraes</option>
+            <option>Andreia Ribeiro da Matta</option>
+            <option>Bruna Roberta Bicalho de Oliveira</option>
+            <option>Chaves</option>
+            <option>Davi Almeida Silva</option>
+            <option>Dayanne Vitoria de Vargas Correia</option>
+            <option>Debora Fitz</option>
+            <option>Eder Gomes de Souza</option>
+            <option>Eduardo Marcos Aguiar Junior</option>
+            <option>Edvaldo Barbosa De Carvalho</option>
+            <option>Elton Paulo Bento</option>
+            <option>Filipe Barreiros Pego</option>
+            <option>Gabriela Nassif Dias Ribeiro</option>
+            <option>Glauber Santos</option>
+            <option>Gustavo Ferreira Costa</option>
+            <option>Helio Martins Deziderio</option>
+            <option>Hernani Batista Quinário</option>
+            <option>Heverton Felipe Bello Teixeira Chaves</option>
+            <option>Inativos</option>
+            <option>Jeremias De Souza Biliatto Junior</option>
+            <option>Joaquim Lopes Rodrigues Filho</option>
+            <option>Josiane Faria Santos de Castro</option>
+            <option>Kalinca Rafaela Cruz Menegati</option>
+            <option>Kamila Ferreira Pontes</option>
+            <option>Kamila Santos Natividade</option>
+            <option>Kaue Alinson Pereira De Toledo Arantes</option>
+            <option>Laleska Olivieri Araújo</option>
+            <option>Leonardo de Souza Ferreira</option>
+            <option>Lincoln Garcia Dos Reis</option>
+            <option>Luciane Carvalho</option>
+            <option>Marcello Fernando Aragão</option>
+            <option>Marcelo Pereira Lima</option>
+            <option>Marco Antonio de Souza Ferreira</option>
+            <option>Marcos Vinicius Texeira Chaves</option>
+            <option>Nayara Regina Nunes Brunes</option>
+            <option>Patrick Emanuel Loro Da Silva</option>
+            <option>Pedro Fernandes</option>
+            <option>Pedro Guilherme Salvador Muniz</option>
+            <option>Richard Sanches</option>
+            <option>Rodrigo Aparecido Garcia</option>
+            <option>Rodrigo Vitica</option>
+            <option>Rosangela Selini</option>
+            <option>Rutchelly Cabral de Queiroz</option>
+            <option>Tainara Macarini</option>
+            <option>Telis Cardoso Galhardo de Figueiredo</option>
+            <option>Thane Oliveira</option>
+            <option>Thiago Henrique Dos Santos</option>
+            <option>Tiago Barbosa Favaro</option>
+            <option>Tuany Trindade</option>
+            <option>Vinicius Henrique Gualberto Dutra</option>
+            <option>William Kimura Ferretti</option>
+          </select></div>
         <div class="field col-8"><label>Motivo <span class="req">*</span></label><input id="e_motivo" type="text" list="dl_motivos"></div>
         <div class="field col-4"><label>Status</label>
           <select id="e_status">
@@ -885,7 +994,6 @@ async function onFilialChange(){
   try{
     state.funcRows = await dbByFilial(f);
     renderFuncList();
-    refreshVendorDatalist();
   }catch(err){
     console.error(err);
     $('#f_list').innerHTML = `<div class="empty"><h4>Erro ao carregar</h4><p>${escapeHtml(err.message||'Falha na conexão')}</p></div>`;
@@ -893,10 +1001,6 @@ async function onFilialChange(){
   }
 }
 
-function refreshVendorDatalist(){
-  const names = [...new Set(state.funcRows.map(r=>cleanText(r.vendedor)).filter(Boolean))].sort();
-  $('#dl_vendedores').innerHTML = names.map(n=>`<option value="${escapeHtml(n)}"></option>`).join('');
-}
 
 function renderFuncList(){
   const rows = state.funcRows;
@@ -983,7 +1087,6 @@ async function submitFuncForm(){
     const saved = await dbInsert(row);
     state.funcRows.unshift(saved);
     renderFuncList();
-    refreshVendorDatalist();
     clearFuncForm(false);
     toast('Lançamento enviado.', 'ok');
   }catch(err){
@@ -1022,7 +1125,6 @@ function buildAdminFilterOptions(){
   const cur = $('#flt_vendedor').value;
   $('#flt_vendedor').innerHTML = '<option value="">Todos</option>' + vendedores.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
   if(vendedores.includes(cur)) $('#flt_vendedor').value = cur;
-  $('#dl_vendedores_all').innerHTML = vendedores.map(v=>`<option value="${escapeHtml(v)}"></option>`).join('');
 }
 
 function getFilteredAdmin(){
