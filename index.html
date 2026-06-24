@@ -309,6 +309,50 @@
   @keyframes slideIn{from{opacity:0; transform:translateX(20px)}to{opacity:1; transform:none}}
 
   .hint{font-size:12px; color:var(--muted); margin-top:6px}
+
+  /* ---------- Vendedor combobox ---------- */
+  .vend-wrap{position:relative; width:100%}
+  .vend-input{
+    font-family:var(--body); font-size:14px; color:var(--ink);
+    background:#fff; border:1.5px solid var(--line); border-radius:var(--r-sm);
+    padding:10px 36px 10px 12px; width:100%; outline:none;
+    transition:border-color .12s, box-shadow .12s;
+    cursor:pointer;
+  }
+  .vend-input:focus,.vend-input.open{
+    border-color:var(--orange); box-shadow:0 0 0 3px rgba(226,137,42,.15);
+  }
+  .vend-input.invalid{border-color:var(--rej-tx); box-shadow:0 0 0 3px rgba(178,58,46,.12)}
+  .vend-arrow{
+    position:absolute; right:11px; top:50%; transform:translateY(-50%);
+    pointer-events:none; color:var(--muted);
+    transition:transform .15s;
+  }
+  .vend-wrap.open .vend-arrow{transform:translateY(-50%) rotate(180deg)}
+  .vend-dropdown{
+    position:absolute; z-index:30; left:0; right:0; top:calc(100% + 4px);
+    background:#fff; border:1.5px solid var(--orange);
+    border-radius:var(--r-sm); box-shadow:0 8px 28px rgba(18,31,58,.14);
+    max-height:230px; overflow-y:auto; display:none;
+  }
+  .vend-wrap.open .vend-dropdown{display:block; animation:fade .12s ease}
+  .vend-search{
+    position:sticky; top:0; padding:8px 10px; background:#fff;
+    border-bottom:1px solid var(--line);
+  }
+  .vend-search input{
+    font-size:13px; padding:7px 10px; border-radius:7px;
+    border:1.5px solid var(--line); width:100%; outline:none;
+    transition:border-color .12s;
+  }
+  .vend-search input:focus{border-color:var(--orange)}
+  .vend-option{
+    padding:9px 12px; cursor:pointer; font-size:14px;
+    transition:background .08s;
+  }
+  .vend-option:hover,.vend-option.focused{background:var(--bg)}
+  .vend-option.selected{background:rgba(226,137,42,.1); color:var(--orange-dk); font-weight:500}
+  .vend-none{padding:10px 12px; font-size:13px; color:var(--muted); text-align:center}
   .pill-count{font-family:var(--mono); font-size:12px; background:var(--bg); border:1px solid var(--line); padding:3px 10px; border-radius:999px; color:var(--muted)}
 
   /* ---------- Responsivo ---------- */
@@ -368,6 +412,13 @@
   html[data-theme="dark"] input,
   html[data-theme="dark"] select,
   html[data-theme="dark"] textarea{ background-color:#0B1322; color:var(--ink); }
+  html[data-theme="dark"] .vend-input{ background-color:#0B1322; color:var(--ink); }
+  html[data-theme="dark"] .vend-dropdown{ background:#0F1729; border-color:var(--orange); }
+  html[data-theme="dark"] .vend-search{ background:#0F1729; border-bottom-color:var(--line); }
+  html[data-theme="dark"] .vend-search input{ background:#0B1322; color:var(--ink); }
+  html[data-theme="dark"] .vend-option:hover,
+  html[data-theme="dark"] .vend-option.focused{ background:rgba(255,255,255,.05); }
+  html[data-theme="dark"] .vend-option.selected{ background:rgba(226,137,42,.15); }
   html[data-theme="dark"] select{
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238B96AD' stroke-width='2' stroke-linecap='round'/></svg>");
   }
@@ -502,62 +553,15 @@
         </div>
         <div class="field col-5">
           <label>Vendedor <span class="req">*</span></label>
-          <select id="f_vendedor">
-            <option value="">Selecione o vendedor…</option>
-            <option>Alex Oliveira</option>
-            <option>Ana Cristina Pires Viana</option>
-            <option>Anderson José Bittencourt Moraes</option>
-            <option>Andreia Ribeiro da Matta</option>
-            <option>Bruna Roberta Bicalho de Oliveira</option>
-            <option>Chaves</option>
-            <option>Davi Almeida Silva</option>
-            <option>Dayanne Vitoria de Vargas Correia</option>
-            <option>Debora Fitz</option>
-            <option>Eder Gomes de Souza</option>
-            <option>Eduardo Marcos Aguiar Junior</option>
-            <option>Edvaldo Barbosa De Carvalho</option>
-            <option>Elton Paulo Bento</option>
-            <option>Filipe Barreiros Pego</option>
-            <option>Gabriela Nassif Dias Ribeiro</option>
-            <option>Glauber Santos</option>
-            <option>Gustavo Ferreira Costa</option>
-            <option>Helio Martins Deziderio</option>
-            <option>Hernani Batista Quinário</option>
-            <option>Heverton Felipe Bello Teixeira Chaves</option>
-            <option>Inativos</option>
-            <option>Jeremias De Souza Biliatto Junior</option>
-            <option>Joaquim Lopes Rodrigues Filho</option>
-            <option>Josiane Faria Santos de Castro</option>
-            <option>Kalinca Rafaela Cruz Menegati</option>
-            <option>Kamila Ferreira Pontes</option>
-            <option>Kamila Santos Natividade</option>
-            <option>Kaue Alinson Pereira De Toledo Arantes</option>
-            <option>Laleska Olivieri Araújo</option>
-            <option>Leonardo de Souza Ferreira</option>
-            <option>Lincoln Garcia Dos Reis</option>
-            <option>Luciane Carvalho</option>
-            <option>Marcello Fernando Aragão</option>
-            <option>Marcelo Pereira Lima</option>
-            <option>Marco Antonio de Souza Ferreira</option>
-            <option>Marcos Vinicius Texeira Chaves</option>
-            <option>Nayara Regina Nunes Brunes</option>
-            <option>Patrick Emanuel Loro Da Silva</option>
-            <option>Pedro Fernandes</option>
-            <option>Pedro Guilherme Salvador Muniz</option>
-            <option>Richard Sanches</option>
-            <option>Rodrigo Aparecido Garcia</option>
-            <option>Rodrigo Vitica</option>
-            <option>Rosangela Selini</option>
-            <option>Rutchelly Cabral de Queiroz</option>
-            <option>Tainara Macarini</option>
-            <option>Telis Cardoso Galhardo de Figueiredo</option>
-            <option>Thane Oliveira</option>
-            <option>Thiago Henrique Dos Santos</option>
-            <option>Tiago Barbosa Favaro</option>
-            <option>Tuany Trindade</option>
-            <option>Vinicius Henrique Gualberto Dutra</option>
-            <option>William Kimura Ferretti</option>
-          </select>
+          <div class="vend-wrap" id="vend_wrap_f">
+            <input type="text" class="vend-input" id="f_vendedor_display" placeholder="Selecione o vendedor…" readonly>
+            <input type="hidden" id="f_vendedor">
+            <svg class="vend-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="vend-dropdown" id="vend_drop_f">
+              <div class="vend-search"><input type="text" id="vend_search_f" placeholder="Buscar vendedor…" autocomplete="off"></div>
+              <div id="vend_list_f"></div>
+            </div>
+          </div>
         </div>
 
         <div class="field col-12">
@@ -714,62 +718,17 @@
         <div class="field col-3"><label>Frete (R$) <span class="req">*</span></label><div class="money-prefix"><span>R$</span><input id="e_frete" type="text" inputmode="decimal"></div></div>
         <div class="field col-12"><label>Cliente <span class="req">*</span></label><input id="e_cliente" type="text"></div>
         <div class="field col-6"><label>Transportadora <span class="req">*</span></label><input id="e_transp" type="text"></div>
-        <div class="field col-6"><label>Vendedor <span class="req">*</span></label><select id="e_vendedor">
-            <option value="">Selecione o vendedor…</option>
-            <option>Alex Oliveira</option>
-            <option>Ana Cristina Pires Viana</option>
-            <option>Anderson José Bittencourt Moraes</option>
-            <option>Andreia Ribeiro da Matta</option>
-            <option>Bruna Roberta Bicalho de Oliveira</option>
-            <option>Chaves</option>
-            <option>Davi Almeida Silva</option>
-            <option>Dayanne Vitoria de Vargas Correia</option>
-            <option>Debora Fitz</option>
-            <option>Eder Gomes de Souza</option>
-            <option>Eduardo Marcos Aguiar Junior</option>
-            <option>Edvaldo Barbosa De Carvalho</option>
-            <option>Elton Paulo Bento</option>
-            <option>Filipe Barreiros Pego</option>
-            <option>Gabriela Nassif Dias Ribeiro</option>
-            <option>Glauber Santos</option>
-            <option>Gustavo Ferreira Costa</option>
-            <option>Helio Martins Deziderio</option>
-            <option>Hernani Batista Quinário</option>
-            <option>Heverton Felipe Bello Teixeira Chaves</option>
-            <option>Inativos</option>
-            <option>Jeremias De Souza Biliatto Junior</option>
-            <option>Joaquim Lopes Rodrigues Filho</option>
-            <option>Josiane Faria Santos de Castro</option>
-            <option>Kalinca Rafaela Cruz Menegati</option>
-            <option>Kamila Ferreira Pontes</option>
-            <option>Kamila Santos Natividade</option>
-            <option>Kaue Alinson Pereira De Toledo Arantes</option>
-            <option>Laleska Olivieri Araújo</option>
-            <option>Leonardo de Souza Ferreira</option>
-            <option>Lincoln Garcia Dos Reis</option>
-            <option>Luciane Carvalho</option>
-            <option>Marcello Fernando Aragão</option>
-            <option>Marcelo Pereira Lima</option>
-            <option>Marco Antonio de Souza Ferreira</option>
-            <option>Marcos Vinicius Texeira Chaves</option>
-            <option>Nayara Regina Nunes Brunes</option>
-            <option>Patrick Emanuel Loro Da Silva</option>
-            <option>Pedro Fernandes</option>
-            <option>Pedro Guilherme Salvador Muniz</option>
-            <option>Richard Sanches</option>
-            <option>Rodrigo Aparecido Garcia</option>
-            <option>Rodrigo Vitica</option>
-            <option>Rosangela Selini</option>
-            <option>Rutchelly Cabral de Queiroz</option>
-            <option>Tainara Macarini</option>
-            <option>Telis Cardoso Galhardo de Figueiredo</option>
-            <option>Thane Oliveira</option>
-            <option>Thiago Henrique Dos Santos</option>
-            <option>Tiago Barbosa Favaro</option>
-            <option>Tuany Trindade</option>
-            <option>Vinicius Henrique Gualberto Dutra</option>
-            <option>William Kimura Ferretti</option>
-          </select></div>
+        <div class="field col-6"><label>Vendedor <span class="req">*</span></label>
+          <div class="vend-wrap" id="vend_wrap_e">
+            <input type="text" class="vend-input" id="e_vendedor_display" placeholder="Selecione o vendedor…" readonly>
+            <input type="hidden" id="e_vendedor">
+            <svg class="vend-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="vend-dropdown" id="vend_drop_e">
+              <div class="vend-search"><input type="text" id="vend_search_e" placeholder="Buscar vendedor…" autocomplete="off"></div>
+              <div id="vend_list_e"></div>
+            </div>
+          </div>
+        </div>
         <div class="field col-8"><label>Motivo <span class="req">*</span></label><input id="e_motivo" type="text" list="dl_motivos"></div>
         <div class="field col-4"><label>Status</label>
           <select id="e_status">
@@ -1057,7 +1016,9 @@ function validateEntry(v, prefix){
   const freteNum = parseMoney(v.frete);
   mark(prefix+'frete', isNaN(freteNum) || freteNum < 0);
   mark(prefix+'transp', !v.transportadora);
-  mark(prefix+'vendedor', !v.vendedor);
+  // vendedor: mark the display input (combobox) not the hidden
+  const vendEl = prefix==='#f_' ? $('#f_vendedor_display') : (prefix==='#e_' ? $('#e_vendedor_display') : $(prefix+'vendedor'));
+  if(vendEl){ vendEl.classList.toggle('invalid', !v.vendedor); if(!v.vendedor) ok=false; }
   mark(prefix+'motivo', !v.motivo);
   return { ok, freteNum };
 }
@@ -1100,6 +1061,7 @@ async function submitFuncForm(){
 function clearFuncForm(clearAll){
   ['#f_nota','#f_cliente','#f_frete','#f_transp','#f_vendedor','#f_motivo'].forEach(s=>{ $(s).value=''; $(s).classList.remove('invalid'); });
   $('#f_data').value = todayISO();
+  vendSetValue('f', '');
   if(clearAll){ $('#f_nota').focus(); }
 }
 
@@ -1267,14 +1229,14 @@ function openEdit(id){
   $('#e_frete').value = (Number(row.frete)||0).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('#e_cliente').value = row.cliente||'';
   $('#e_transp').value = row.transportadora||'';
-  $('#e_vendedor').value = row.vendedor||'';
+  vendSetValue('e', row.vendedor||'');
   $('#e_motivo').value = row.motivo||'';
   $('#e_status').value = row.status||'pendente';
   // funcionário não muda status nem filial
   const isFunc = $('#screen-func').classList.contains('is-active');
   $('#e_status').closest('.field').style.display = isFunc ? 'none' : 'flex';
   $('#e_filial').disabled = isFunc;
-  $$('#editOverlay .invalid').forEach(el=>el.classList.remove('invalid'));
+  $$('#editOverlay .invalid').forEach(el=>el.classList.remove('invalid')); vendSetValue('e','');
   $('#editOverlay').classList.add('is-open');
 }
 function closeEdit(){ $('#editOverlay').classList.remove('is-open'); state.editingId=null; }
@@ -1406,6 +1368,104 @@ function exportExcel(){
 /* ================================================================
    EVENTOS
    ================================================================ */
+/* ================================================================
+   VENDEDOR COMBOBOX
+   ================================================================ */
+const VENDEDORES = [
+  'Alex Oliveira','Ana Cristina Pires Viana','Anderson José Bittencourt Moraes',
+  'Andreia Ribeiro da Matta','Bruna Roberta Bicalho de Oliveira','Chaves',
+  'Davi Almeida Silva','Dayanne Vitoria de Vargas Correia','Debora Fitz',
+  'Eder Gomes de Souza','Eduardo Marcos Aguiar Junior','Edvaldo Barbosa De Carvalho',
+  'Elton Paulo Bento','Filipe Barreiros Pego','Gabriela Nassif Dias Ribeiro',
+  'Glauber Santos','Gustavo Ferreira Costa','Helio Martins Deziderio',
+  'Hernani Batista Quinário','Heverton Felipe Bello Teixeira Chaves','Inativos',
+  'Jeremias De Souza Biliatto Junior','Joaquim Lopes Rodrigues Filho',
+  'Josiane Faria Santos de Castro','Kalinca Rafaela Cruz Menegati',
+  'Kamila Ferreira Pontes','Kamila Santos Natividade',
+  'Kaue Alinson Pereira De Toledo Arantes','Laleska Olivieri Araújo',
+  'Leonardo de Souza Ferreira','Lincoln Garcia Dos Reis','Luciane Carvalho',
+  'Marcello Fernando Aragão','Marcelo Pereira Lima','Marco Antonio de Souza Ferreira',
+  'Marcos Vinicius Texeira Chaves','Nayara Regina Nunes Brunes',
+  'Patrick Emanuel Loro Da Silva','Pedro Fernandes','Pedro Guilherme Salvador Muniz',
+  'Richard Sanches','Rodrigo Aparecido Garcia','Rodrigo Vitica','Rosangela Selini',
+  'Rutchelly Cabral de Queiroz','Tainara Macarini','Telis Cardoso Galhardo de Figueiredo',
+  'Thane Oliveira','Thiago Henrique Dos Santos','Tiago Barbosa Favaro',
+  'Tuany Trindade','Vinicius Henrique Gualberto Dutra','William Kimura Ferretti'
+];
+
+function vendRenderList(suffix, query){
+  const list = $('#vend_list_'+suffix);
+  const q = (query||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const current = $('#'+suffix+'_vendedor').value;
+  const filtered = VENDEDORES.filter(n=>{
+    const norm = n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    return norm.includes(q);
+  });
+  if(!filtered.length){
+    list.innerHTML = '<div class="vend-none">Nenhum vendedor encontrado</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(n=>{
+    const sel = n===current ? ' selected' : '';
+    const hl = q ? n.replace(new RegExp('('+escapeRegex(query)+')', 'gi'), '<b>$1</b>') : n;
+    return `<div class="vend-option${sel}" data-val="${escapeHtml(n)}">${hl}</div>`;
+  }).join('');
+}
+
+function escapeRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+function vendOpen(suffix){
+  const wrap = $('#vend_wrap_'+suffix);
+  wrap.classList.add('open');
+  const inp = $('#'+suffix+'_vendedor_display');
+  inp.classList.add('open');
+  const srch = $('#vend_search_'+suffix);
+  srch.value = '';
+  vendRenderList(suffix, '');
+  setTimeout(()=>srch.focus(), 50);
+}
+
+function vendClose(suffix){
+  const wrap = $('#vend_wrap_'+suffix);
+  wrap.classList.remove('open');
+  $('#'+suffix+'_vendedor_display').classList.remove('open');
+}
+
+function vendSetValue(suffix, val){
+  $('#'+suffix+'_vendedor').value = val;
+  const disp = $('#'+suffix+'_vendedor_display');
+  disp.value = val || '';
+  // remove invalid if a value is picked
+  if(val) disp.classList.remove('invalid');
+}
+
+function vendBind(suffix){
+  const wrap = $('#vend_wrap_'+suffix);
+  const display = $('#'+suffix+'_vendedor_display');
+  const drop = $('#vend_drop_'+suffix);
+  const search = $('#vend_search_'+suffix);
+  const list = $('#vend_list_'+suffix);
+
+  display.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(wrap.classList.contains('open')){ vendClose(suffix); } else { vendOpen(suffix); }
+  });
+  search.addEventListener('click', e=>e.stopPropagation());
+  search.addEventListener('input', ()=>vendRenderList(suffix, search.value));
+  list.addEventListener('click', e=>{
+    const opt = e.target.closest('[data-val]');
+    if(!opt) return;
+    vendSetValue(suffix, opt.getAttribute('data-val'));
+    vendClose(suffix);
+  });
+  drop.addEventListener('mousedown', e=>e.preventDefault()); // keep focus on search
+}
+
+// Close on outside click
+document.addEventListener('click', ()=>{
+  ['f','e'].forEach(s=>{ if($('#vend_wrap_'+s)) vendClose(s); });
+});
+
 function bind(){
   $('#goFunc').addEventListener('click', ()=>{ showScreen('screen-func','Funcionário'); fillFiliais(); $('#f_data').value=todayISO(); });
   $('#goAdmin').addEventListener('click', ()=>{
@@ -1484,6 +1544,8 @@ function init(){
   initTheme();
   fillFiliais();
   bind();
+  vendBind('f');
+  vendBind('e');
   if(!isConfigured){ $('#configBanner').style.display='block'; }
 }
 init();
