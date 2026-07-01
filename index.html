@@ -335,10 +335,48 @@
     .field.col-6,.field.col-4,.field.col-3,.field.col-8{grid-column:span 12}
     .role-grid{grid-template-columns:1fr}
   }
+
+  /* Tabelas viram "cards" empilhados em telas estreitas, em vez de rolar na horizontal */
+  @media (max-width: 760px){
+    .table-wrap{overflow-x:visible; border:none; background:transparent; box-shadow:none}
+    .table-wrap table{min-width:0; width:100%; border-collapse:separate; border-spacing:0 10px; font-size:13px}
+    .table-wrap thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+    .table-wrap tbody tr{
+      display:block; background:var(--card); border:1px solid var(--line); border-radius:var(--r-sm);
+      box-shadow:var(--shadow-sm); padding:2px 14px;
+    }
+    .table-wrap tbody tr:hover{background:var(--card)}
+    .table-wrap tbody td{
+      display:flex; justify-content:space-between; align-items:center; gap:14px;
+      padding:9px 0; border-bottom:1px dashed var(--line); text-align:right; white-space:normal; max-width:none;
+    }
+    .table-wrap tbody td:last-child{border-bottom:none}
+    .table-wrap tbody td::before{
+      content:attr(data-label); font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+      text-transform:uppercase; color:var(--muted); text-align:left; flex:0 0 auto; margin-right:auto;
+    }
+    .table-wrap tbody td[data-label=""]::before{content:none}
+    .table-wrap .row-actions{justify-content:flex-end}
+    .table-wrap tbody tr.note-row{
+      display:block; background:var(--dev-bg); border:1px solid var(--dev-bg); border-radius:var(--r-sm);
+      box-shadow:none; padding:0; margin-top:-6px;
+    }
+    .table-wrap tbody tr.note-row td{display:block; padding:10px 14px; border:0}
+    .table-wrap tbody tr.note-row td::before{content:none}
+    .table-wrap tfoot td{
+      display:flex; justify-content:space-between; padding:9px 0; border-bottom:none;
+    }
+    .table-wrap tfoot td::before{
+      content:attr(data-label); font-family:var(--mono); font-size:10px; text-transform:uppercase;
+      letter-spacing:.06em; color:var(--muted); text-align:left;
+    }
+    .table-wrap tfoot td[data-label=""]{display:none}
+    .table-wrap .resumo-foot tr{background:var(--card); border-radius:var(--r-sm)}
+    .status-select{width:100%; max-width:180px}
+  }
   @media (max-width: 560px){
     .container{padding:18px 14px 50px}
-    .topbar h2{font-size:22px}
-    .stats{grid-template-columns:1fr 1fr}
+    .topbar h2{font-size:22px}    .stats{grid-template-columns:1fr 1fr}
   }
 
   /* ============================================================
@@ -1054,13 +1092,13 @@ function renderFuncList(){
       ? `<tr class="note-row"><td colspan="7"><div class="note-callout"><b>Dúvida do administrador:</b> ${escapeHtml(r.nota_admin)}<span class="note-hint">Edite o lançamento e reenvie.</span></div></td></tr>`
       : '';
     return `<tr>
-      <td class="mono">${fmtDateBR(r.data)}</td>
-      <td class="mono">${escapeHtml(r.nota)}</td>
-      <td class="cell-cliente">${escapeHtml(r.cliente)}</td>
-      <td>${escapeHtml(r.vendedor)}</td>
-      <td class="num">${fmtMoney(r.frete)}</td>
-      <td class="center"><span class="badge ${st}">${statusLabel(st)}</span></td>
-      <td>${acts}</td>
+      <td class="mono" data-label="Data">${fmtDateBR(r.data)}</td>
+      <td class="mono" data-label="Nota">${escapeHtml(r.nota)}</td>
+      <td class="cell-cliente" data-label="Cliente">${escapeHtml(r.cliente)}</td>
+      <td data-label="Vendedor">${escapeHtml(r.vendedor)}</td>
+      <td class="num" data-label="Frete">${fmtMoney(r.frete)}</td>
+      <td class="center" data-label="Status"><span class="badge ${st}">${statusLabel(st)}</span></td>
+      <td data-label="Ações">${acts}</td>
     </tr>${noteRow}`;
   }).join('');
   $('#f_list').innerHTML = `<div class="table-wrap"><table>
@@ -1221,16 +1259,16 @@ function renderAdminTable(rows){
   const body = rows.map(r=>{
     const st = r.status || 'pendente';
     return `<tr>
-      <td class="mono">${fmtDateBR(r.data)}</td>
-      <td class="mono">${escapeHtml(r.nota)}</td>
-      <td class="center mono">${escapeHtml(r.filial)}</td>
-      <td class="cell-cliente">${escapeHtml(r.cliente)}</td>
-      <td class="num">${fmtMoney(r.frete)}</td>
-      <td>${escapeHtml(r.transportadora)}</td>
-      <td>${escapeHtml(r.vendedor)}</td>
-      <td class="cell-motivo">${escapeHtml(r.motivo)}</td>
-      <td>${escapeHtml(r.enviado_por||'—')}</td>
-      <td class="center">
+      <td class="mono" data-label="Data">${fmtDateBR(r.data)}</td>
+      <td class="mono" data-label="Nota">${escapeHtml(r.nota)}</td>
+      <td class="center mono" data-label="Filial">${escapeHtml(r.filial)}</td>
+      <td class="cell-cliente" data-label="Cliente">${escapeHtml(r.cliente)}</td>
+      <td class="num" data-label="Frete">${fmtMoney(r.frete)}</td>
+      <td data-label="Transportadora">${escapeHtml(r.transportadora)}</td>
+      <td data-label="Vendedor">${escapeHtml(r.vendedor)}</td>
+      <td class="cell-motivo" data-label="Motivo">${escapeHtml(r.motivo)}</td>
+      <td data-label="Enviado por">${escapeHtml(r.enviado_por||'—')}</td>
+      <td class="center" data-label="Status">
         <select class="status-select ${st}" data-status="${r.id}">
           <option value="pendente"${st==='pendente'?' selected':''}>Pendente</option>
           <option value="aprovado"${st==='aprovado'?' selected':''}>Aprovado</option>
@@ -1238,7 +1276,7 @@ function renderAdminTable(rows){
           <option value="revisar"${st==='revisar'?' selected':''}>Devolvido</option>
         </select>
       </td>
-      <td>
+      <td data-label="Ações">
         <div class="row-actions">
           <button class="icon-btn" title="Devolver com dúvida" data-adevolver="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10L4 15l5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
           <button class="icon-btn" title="Editar" data-aedit="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
@@ -1270,15 +1308,15 @@ function renderResumo(rows){
   }
   const total = list.reduce((s,x)=>s+x.valor,0);
   const body = list.map(x=>`<tr>
-    <td class="center mono">${escapeHtml(x.filial)}</td>
-    <td>${escapeHtml(x.vendedor)}</td>
-    <td class="num">${fmtMoney(x.valor)}</td>
+    <td class="center mono" data-label="Filial">${escapeHtml(x.filial)}</td>
+    <td data-label="Vendedor">${escapeHtml(x.vendedor)}</td>
+    <td class="num" data-label="Valor">${fmtMoney(x.valor)}</td>
   </tr>`).join('');
   $('#a_resumo').innerHTML = `<div class="table-wrap"><table class="resumo-table">
     <thead><tr><th class="center">Filial</th><th>Vendedor</th><th class="num">Valor</th></tr></thead>
     <tbody>${body}</tbody>
     <tfoot class="resumo-foot"><tr>
-      <td></td><td>TOTAL</td><td class="num total-val">${fmtMoney(total)}</td>
+      <td data-label=""></td><td data-label="">TOTAL</td><td class="num total-val" data-label="Total">${fmtMoney(total)}</td>
     </tr></tfoot>
   </table></div>`;
 }
@@ -1312,18 +1350,18 @@ function renderVendedores(){
     const ativo = v.ativo !== false;
     if(state.venEditId === v.id){
       return `<tr>
-        <td><input class="inline-edit" id="ve_nome_${v.id}" type="text" value="${escapeHtml(v.nome)}"></td>
-        <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
-        <td><div class="row-actions">
+        <td data-label="Vendedor"><input class="inline-edit" id="ve_nome_${v.id}" type="text" value="${escapeHtml(v.nome)}"></td>
+        <td class="center" data-label="Status"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
+        <td data-label="Ações"><div class="row-actions">
           <button class="icon-btn" title="Salvar" data-vsave="${v.id}">${icnSave}</button>
           <button class="icon-btn" title="Cancelar" data-vcancel="${v.id}">${icnCancel}</button>
         </div></td>
       </tr>`;
     }
     return `<tr>
-      <td>${escapeHtml(v.nome)}</td>
-      <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
-      <td><div class="row-actions">
+      <td data-label="Vendedor">${escapeHtml(v.nome)}</td>
+      <td class="center" data-label="Status"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
+      <td data-label="Ações"><div class="row-actions">
         <button class="icon-btn" title="Editar nome" data-vedit="${v.id}">${icnEdit}</button>
         <button class="icon-btn" title="${ativo?'Inativar':'Ativar'}" data-vtoggle="${v.id}">${icnPower}</button>
         <button class="icon-btn danger" title="Excluir" data-vdel="${v.id}">${icnDel}</button>
