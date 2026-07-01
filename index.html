@@ -513,11 +513,11 @@
           <label>Frete (R$) <span class="req">*</span></label>
           <div class="money-prefix"><span>R$</span><input id="f_frete" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off"></div>
         </div>
-        <div class="field col-4">
+        <div class="field col-3">
           <label>Transportadora <span class="req">*</span></label>
           <input id="f_transp" type="text" placeholder="Nome da transportadora" autocomplete="off">
         </div>
-        <div class="field col-5">
+        <div class="field col-6">
           <label>Vendedor <span class="req">*</span></label>
           <select id="f_vendedor"><option value="">Selecione a filial…</option></select>
         </div>
@@ -643,22 +643,20 @@
         <p class="hint" id="exportHint">O <b>Detalhado</b> exporta as linhas exibidas no filtro atual. O <b>Resumo</b> (Filial × Vendedor × Valor) soma apenas os <b>Aprovados</b>. Dica: filtre Status = Aprovado para que as duas abas mostrem só o que será descontado.</p>
       </div>
 
-      <div class="two-col">
-        <!-- Tabela detalhada -->
-        <div class="card">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; flex-wrap:wrap">
-            <p class="panel-title" style="margin:0">Lançamentos recebidos</p>
-            <span class="pill-count" id="a_count">0</span>
-          </div>
-          <div id="a_table"></div>
+      <!-- Tabela detalhada -->
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; flex-wrap:wrap">
+          <p class="panel-title" style="margin:0">Lançamentos recebidos</p>
+          <span class="pill-count" id="a_count">0</span>
         </div>
+        <div id="a_table"></div>
+      </div>
 
-        <!-- Resumo -->
-        <div class="card">
-          <p class="panel-title">Resumo por vendedor</p>
-          <p class="panel-sub">Soma do frete dos descontos <b>aprovados</b> no filtro atual.</p>
-          <div id="a_resumo"></div>
-        </div>
+      <!-- Resumo -->
+      <div class="card">
+        <p class="panel-title">Resumo por vendedor</p>
+        <p class="panel-sub">Soma do frete dos descontos <b>aprovados</b> no filtro atual.</p>
+        <div id="a_resumo"></div>
       </div>
       </div><!-- /#tab-descontos -->
 
@@ -666,20 +664,32 @@
       <div id="tab-vendedores" style="display:none">
         <div class="card" style="margin-bottom:18px">
           <p class="panel-title">Cadastrar vendedor</p>
-          <p class="panel-sub">Os vendedores cadastrados aqui aparecem para as filiais na hora de lançar um desconto.</p>
+          <p class="panel-sub">Os vendedores cadastrados aqui aparecem para todas as filiais na hora de lançar um desconto.</p>
           <div class="form-grid">
-            <div class="field col-6">
+            <div class="field col-8">
               <label>Nome do vendedor <span class="req">*</span></label>
               <input id="v_nome" type="text" placeholder="Nome do vendedor" autocomplete="off">
             </div>
-            <div class="field col-3">
-              <label>Filial <span class="req">*</span></label>
-              <select id="v_filial"></select>
-            </div>
-            <div class="field col-3" style="justify-content:flex-end">
+            <div class="field col-4" style="justify-content:flex-end">
               <button class="btn btn-primary" id="v_add" type="button">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
                 Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <p class="panel-title">Importar vendedores em massa</p>
+          <p class="panel-sub">Envie um Excel (.xlsx) com uma única coluna contendo os nomes dos vendedores, um por linha. Nomes já cadastrados são ignorados automaticamente.</p>
+          <div class="form-grid">
+            <div class="field col-8">
+              <input id="v_import_file" type="file" accept=".xlsx,.xls,.csv">
+            </div>
+            <div class="field col-4" style="justify-content:flex-end">
+              <button class="btn btn-navy" id="v_import_btn" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                Importar planilha
               </button>
             </div>
           </div>
@@ -691,10 +701,7 @@
               <p class="panel-title" style="margin:0">Vendedores cadastrados</p>
               <p class="panel-sub" style="margin:2px 0 0">Inative quem saiu (preserva o histórico) ou exclua definitivamente.</p>
             </div>
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-              <select id="v_fltFilial" class="mini"><option value="">Todas as filiais</option></select>
-              <span class="pill-count" id="v_count">0</span>
-            </div>
+            <span class="pill-count" id="v_count">0</span>
           </div>
           <div id="v_list"></div>
         </div>
@@ -949,7 +956,7 @@ async function dbDelete(id){
 }
 
 async function dbVendedores(){
-  const { data, error } = await sb.from('vendedores').select('*').order('filial').order('nome');
+  const { data, error } = await sb.from('vendedores').select('*').order('nome');
   if (error) throw error;
   return data || [];
 }
@@ -975,8 +982,6 @@ function fillFiliais(){
   $('#e_filial').innerHTML = FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
   const fopts = '<option value="">Todas</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
   $('#flt_filial').innerHTML = fopts;
-  $('#v_filial').innerHTML = '<option value="">Selecione…</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
-  $('#v_fltFilial').innerHTML = '<option value="">Todas as filiais</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
 }
 
 function setFormEnabled(on){
@@ -1010,8 +1015,8 @@ function refreshVendorDatalist(){ /* Vendedores agora vêm do cadastro (aba Vend
 function fillFuncVendedores(){
   const sel = $('#f_vendedor'); const f = state.funcFilial;
   if(!f){ sel.innerHTML = '<option value="">Selecione a filial…</option>'; sel.disabled = true; return; }
-  const list = [...new Set(state.vendedores.filter(v=>v.filial===f && v.ativo!==false).map(v=>cleanText(v.nome)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-  if(!list.length){ sel.innerHTML = '<option value="">Nenhum vendedor cadastrado nesta filial</option>'; sel.disabled = true; return; }
+  const list = [...new Set(state.vendedores.filter(v=>v.ativo!==false).map(v=>cleanText(v.nome)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  if(!list.length){ sel.innerHTML = '<option value="">Nenhum vendedor cadastrado</option>'; sel.disabled = true; return; }
   sel.disabled = false;
   sel.innerHTML = '<option value="">Selecione…</option>' + list.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
 }
@@ -1289,10 +1294,8 @@ function switchAdminTab(tab){
 }
 
 function renderVendedores(){
-  const flt = $('#v_fltFilial') ? $('#v_fltFilial').value : '';
   let list = (state.vendedores||[]).slice();
-  if(flt) list = list.filter(v=>v.filial===flt);
-  list.sort((a,b)=> String(a.filial).localeCompare(String(b.filial)) || cleanText(a.nome).localeCompare(cleanText(b.nome)));
+  list.sort((a,b)=> cleanText(a.nome).localeCompare(cleanText(b.nome)));
   $('#v_count').textContent = `${list.length} ${list.length===1?'vendedor':'vendedores'}`;
   if(!list.length){
     $('#v_list').innerHTML = `<div class="empty">
@@ -1310,7 +1313,6 @@ function renderVendedores(){
     if(state.venEditId === v.id){
       return `<tr>
         <td><input class="inline-edit" id="ve_nome_${v.id}" type="text" value="${escapeHtml(v.nome)}"></td>
-        <td class="center mono">${escapeHtml(v.filial)}</td>
         <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
         <td><div class="row-actions">
           <button class="icon-btn" title="Salvar" data-vsave="${v.id}">${icnSave}</button>
@@ -1320,7 +1322,6 @@ function renderVendedores(){
     }
     return `<tr>
       <td>${escapeHtml(v.nome)}</td>
-      <td class="center mono">${escapeHtml(v.filial)}</td>
       <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
       <td><div class="row-actions">
         <button class="icon-btn" title="Editar nome" data-vedit="${v.id}">${icnEdit}</button>
@@ -1330,44 +1331,80 @@ function renderVendedores(){
     </tr>`;
   }).join('');
   $('#v_list').innerHTML = `<div class="table-wrap"><table>
-    <thead><tr><th>Vendedor</th><th class="center">Filial</th><th class="center">Status</th><th>Ações</th></tr></thead>
+    <thead><tr><th>Vendedor</th><th class="center">Status</th><th>Ações</th></tr></thead>
     <tbody>${body}</tbody></table></div>`;
 }
 
 async function addVendedor(){
   if(!sb){ toast('Configure o Supabase para cadastrar.', 'err'); return; }
   const nome = cleanText($('#v_nome').value);
-  const filial = $('#v_filial').value;
   let ok = true;
   $('#v_nome').classList.toggle('invalid', !nome); if(!nome) ok=false;
-  $('#v_filial').classList.toggle('invalid', !filial); if(!filial) ok=false;
-  if(!ok){ toast('Informe o nome e a filial do vendedor.', 'err'); return; }
-  const dup = (state.vendedores||[]).find(v=>v.filial===filial && normKey(v.nome)===normKey(nome));
-  if(dup){ toast('Esse vendedor já está cadastrado nesta filial.', 'err'); return; }
+  if(!ok){ toast('Informe o nome do vendedor.', 'err'); return; }
+  const dup = (state.vendedores||[]).find(v=>normKey(v.nome)===normKey(nome));
+  if(dup){ toast('Esse vendedor já está cadastrado.', 'err'); return; }
   const btn = $('#v_add'); btn.disabled=true; btn.style.opacity='.7';
   try{
-    const saved = await dbVendedorInsert({ nome, filial, ativo:true });
+    const saved = await dbVendedorInsert({ nome, ativo:true });
     state.vendedores.push(saved);
     $('#v_nome').value=''; $('#v_nome').classList.remove('invalid'); $('#v_nome').focus();
     renderVendedores();
-    if(state.funcFilial===filial) fillFuncVendedores();
+    fillFuncVendedores();
     toast('Vendedor cadastrado.', 'ok');
   }catch(err){
     console.error(err);
     if(err && (err.code==='42P01' || /does not exist/i.test(err.message||'')))
       toast('Tabela de vendedores não encontrada. Rode o SQL de atualização no Supabase.', 'err', 6000);
     else if(err && (err.code==='23505' || /duplicate|unique/i.test(err.message||'')))
-      toast('Esse vendedor já está cadastrado nesta filial.', 'err');
+      toast('Esse vendedor já está cadastrado.', 'err');
     else
       toast('Erro ao cadastrar: ' + (err.message||'tente novamente'), 'err');
   }finally{ btn.disabled=false; btn.style.opacity='1'; }
+}
+
+async function importVendedoresExcel(file){
+  if(!sb){ toast('Configure o Supabase para importar.', 'err'); return; }
+  if(!file) return;
+  const btn = $('#v_import_btn'); btn.disabled=true; btn.style.opacity='.7';
+  try{
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, {type:'array'});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const aoa = XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:''});
+    let names = aoa.map(row=>cleanText(Array.isArray(row)?row[0]:row)).filter(Boolean);
+    if(names.length && /^(nome|vendedor|vendedores|nome do vendedor)$/i.test(names[0])) names.shift();
+
+    const seen = new Set((state.vendedores||[]).map(v=>normKey(v.nome)));
+    const uniqueNew = [];
+    names.forEach(n=>{ const k=normKey(n); if(k && !seen.has(k)){ seen.add(k); uniqueNew.push(n); } });
+
+    if(!uniqueNew.length){ toast('Nenhum vendedor novo encontrado na planilha.', 'info'); return; }
+
+    let ok=0, fail=0;
+    for(const nome of uniqueNew){
+      try{
+        const saved = await dbVendedorInsert({ nome, ativo:true });
+        state.vendedores.push(saved);
+        ok++;
+      }catch(err){ fail++; }
+    }
+    renderVendedores();
+    fillFuncVendedores();
+    toast(`${ok} vendedor(es) importado(s)${fail?`, ${fail} ignorado(s)`:''}.`, ok?'ok':'err');
+  }catch(err){
+    console.error(err);
+    toast('Erro ao ler a planilha: ' + (err.message||'verifique o arquivo'), 'err');
+  }finally{
+    btn.disabled=false; btn.style.opacity='1';
+    $('#v_import_file').value = '';
+  }
 }
 
 async function toggleVendedor(id){
   const v = (state.vendedores||[]).find(x=>x.id===id); if(!v) return;
   const next = (v.ativo===false);
   v.ativo = next; renderVendedores();
-  if(state.funcFilial===v.filial) fillFuncVendedores();
+  fillFuncVendedores();
   try{ await dbVendedorUpdate(id, { ativo: next }); toast(next?'Vendedor ativado.':'Vendedor inativado.', 'ok', 2000); }
   catch(err){ v.ativo=!next; renderVendedores(); toast('Erro ao atualizar.', 'err'); }
 }
@@ -1380,26 +1417,26 @@ async function saveEditVendedor(id){
   const el = $('#ve_nome_'+id); if(!el) return;
   const nome = cleanText(el.value);
   if(!nome){ toast('O nome não pode ficar vazio.', 'err'); return; }
-  const dup = (state.vendedores||[]).find(x=>x.id!==id && x.filial===v.filial && normKey(x.nome)===normKey(nome));
-  if(dup){ toast('Já existe um vendedor com esse nome nesta filial.', 'err'); return; }
+  const dup = (state.vendedores||[]).find(x=>x.id!==id && normKey(x.nome)===normKey(nome));
+  if(dup){ toast('Já existe um vendedor com esse nome.', 'err'); return; }
   try{
     const saved = await dbVendedorUpdate(id, { nome });
     Object.assign(v, saved);
     state.venEditId = null; renderVendedores();
-    if(state.funcFilial===v.filial) fillFuncVendedores();
+    fillFuncVendedores();
     toast('Nome atualizado.', 'ok');
   }catch(err){ console.error(err); toast('Erro ao salvar: ' + (err.message||'tente novamente'), 'err'); }
 }
 
 async function deleteVendedor(id){
   const v = (state.vendedores||[]).find(x=>x.id===id); if(!v) return;
-  const go = await askConfirm(`Excluir o vendedor <strong>${escapeHtml(v.nome)}</strong> (${escapeHtml(v.filial)})?<br>Os lançamentos já enviados não são afetados.`, 'Excluir');
+  const go = await askConfirm(`Excluir o vendedor <strong>${escapeHtml(v.nome)}</strong>?<br>Os lançamentos já enviados não são afetados.`, 'Excluir');
   if(!go) return;
   try{
     await dbVendedorDelete(id);
     state.vendedores = (state.vendedores||[]).filter(x=>x.id!==id);
     renderVendedores();
-    if(state.funcFilial===v.filial) fillFuncVendedores();
+    fillFuncVendedores();
     toast('Vendedor excluído.', 'ok');
   }catch(err){ console.error(err); toast('Erro ao excluir.', 'err'); }
 }
@@ -1664,7 +1701,11 @@ function bind(){
   // Vendedores (cadastro)
   $('#v_add').addEventListener('click', addVendedor);
   $('#v_nome').addEventListener('keydown', e=>{ if(e.key==='Enter') addVendedor(); });
-  $('#v_fltFilial').addEventListener('change', renderVendedores);
+  $('#v_import_btn').addEventListener('click', ()=>{
+    const f = $('#v_import_file').files[0];
+    if(!f){ toast('Selecione um arquivo Excel para importar.', 'err'); return; }
+    importVendedoresExcel(f);
+  });
   $('#v_list').addEventListener('click', e=>{
     const ed=e.target.closest('[data-vedit]');   if(ed){ startEditVendedor(ed.getAttribute('data-vedit')); return; }
     const sv=e.target.closest('[data-vsave]');   if(sv){ saveEditVendedor(sv.getAttribute('data-vsave')); return; }
@@ -1775,7 +1816,6 @@ alter table public.descontos add column if not exists nota_admin text;
 create table if not exists public.vendedores (
   id          uuid primary key default gen_random_uuid(),
   nome        text        not null,
-  filial      text        not null,
   ativo       boolean     not null default true,
   created_at  timestamptz not null default now()
 );
@@ -1789,9 +1829,14 @@ create policy "acesso_app_vendedores"
   using (true)
   with check (true);
 
--- evita vendedor duplicado na mesma filial (ignora maiúsculas/minúsculas)
-create unique index if not exists uq_vendedores_filial_nome
-  on public.vendedores (filial, lower(nome));
+-- evita vendedor duplicado (ignora maiúsculas/minúsculas)
+create unique index if not exists uq_vendedores_nome
+  on public.vendedores (lower(nome));
+
+-- ===== Atualização (rode uma vez, se a tabela já existia com a coluna "filial"):
+-- os vendedores deixam de ser vinculados a uma filial específica.
+drop index if exists public.uq_vendedores_filial_nome;
+alter table public.vendedores drop column if exists filial;
 
 =====================================================================
 -->
