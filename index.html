@@ -1380,17 +1380,21 @@ async function importVendedoresExcel(file){
 
     if(!uniqueNew.length){ toast('Nenhum vendedor novo encontrado na planilha.', 'info'); return; }
 
-    let ok=0, fail=0;
+    let ok=0, fail=0, firstErr='';
     for(const nome of uniqueNew){
       try{
         const saved = await dbVendedorInsert({ nome, ativo:true });
         state.vendedores.push(saved);
         ok++;
-      }catch(err){ fail++; }
+      }catch(err){ fail++; if(!firstErr) firstErr = (err && err.message) || 'erro desconhecido'; }
     }
     renderVendedores();
     fillFuncVendedores();
-    toast(`${ok} vendedor(es) importado(s)${fail?`, ${fail} ignorado(s)`:''}.`, ok?'ok':'err');
+    if(ok===0 && fail>0){
+      toast(`Falha ao importar: ${firstErr}`, 'err', 8000);
+    } else {
+      toast(`${ok} vendedor(es) importado(s)${fail?`, ${fail} ignorado(s)`:''}.`, 'ok');
+    }
   }catch(err){
     console.error(err);
     toast('Erro ao ler a planilha: ' + (err.message||'verifique o arquivo'), 'err');
