@@ -47,6 +47,7 @@
     --ok-bg:#E6F2F2;  --ok-tx:#2C6E70;
     --pend-bg:#FFF4E5; --pend-tx:#B5751B;
     --rej-bg:#FBEAE7;  --rej-tx:#B23A2E;
+    --dev-bg:#E7EEF7;  --dev-tx:#2E5488;
 
     --r:14px; --r-sm:10px;
     --shadow:0 10px 30px rgba(18,31,58,.08);
@@ -216,6 +217,7 @@
   .badge.pendente{background:var(--pend-bg); color:var(--pend-tx)}
   .badge.aprovado{background:var(--ok-bg); color:var(--ok-tx)}
   .badge.rejeitado{background:var(--rej-bg); color:var(--rej-tx)}
+  .badge.revisar{background:var(--dev-bg); color:var(--dev-tx)}
 
   .status-select{
     font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.04em;
@@ -225,6 +227,12 @@
   .status-select.pendente{background:var(--pend-bg); color:var(--pend-tx); border-color:var(--pend-bg)}
   .status-select.aprovado{background:var(--ok-bg); color:var(--ok-tx); border-color:var(--ok-bg)}
   .status-select.rejeitado{background:var(--rej-bg); color:var(--rej-tx); border-color:var(--rej-bg)}
+  .status-select.revisar{background:var(--dev-bg); color:var(--dev-tx); border-color:var(--dev-bg)}
+  /* Callout de devolução (dúvida do admin) na lista do funcionário */
+  tr.note-row td{background:var(--dev-bg); padding:10px 14px !important; border-top:0}
+  .note-callout{font-size:12.5px; color:var(--dev-tx); line-height:1.5}
+  .note-callout b{color:var(--dev-tx)}
+  .note-hint{display:inline-block; margin-left:8px; opacity:.85; font-style:italic}
 
   .row-actions{display:flex; gap:6px; white-space:nowrap}
   .icon-btn{
@@ -235,12 +243,13 @@
   .icon-btn.danger:hover{color:var(--rej-tx); border-color:var(--rej-bg); background:var(--rej-bg)}
 
   /* ---------- Stats ---------- */
-  .stats{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:18px}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:12px; margin-bottom:18px}
   .stat{background:#fff; border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; box-shadow:var(--shadow-sm)}
   .stat .lbl{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
   .stat .val{font-family:var(--display); font-weight:700; font-size:30px; line-height:1.05; margin-top:4px}
   .stat.accent .val{color:var(--orange)}
   .stat.ok .val{color:var(--teal-dk)}
+  .stat.dev .val{color:var(--dev-tx)}
 
   /* ---------- Filtros ---------- */
   .filters{display:grid; grid-template-columns:repeat(12,1fr); gap:12px; align-items:end; margin-bottom:16px}
@@ -309,51 +318,14 @@
   @keyframes slideIn{from{opacity:0; transform:translateX(20px)}to{opacity:1; transform:none}}
 
   .hint{font-size:12px; color:var(--muted); margin-top:6px}
-
-  /* ---------- Vendedor combobox ---------- */
-  .vend-wrap{position:relative; width:100%}
-  .vend-input{
-    font-family:var(--body); font-size:14px; color:var(--ink);
-    background:#fff; border:1.5px solid var(--line); border-radius:var(--r-sm);
-    padding:10px 36px 10px 12px; width:100%; outline:none;
-    transition:border-color .12s, box-shadow .12s;
-    cursor:pointer;
-  }
-  .vend-input:focus,.vend-input.open{
-    border-color:var(--orange); box-shadow:0 0 0 3px rgba(226,137,42,.15);
-  }
-  .vend-input.invalid{border-color:var(--rej-tx); box-shadow:0 0 0 3px rgba(178,58,46,.12)}
-  .vend-arrow{
-    position:absolute; right:11px; top:50%; transform:translateY(-50%);
-    pointer-events:none; color:var(--muted);
-    transition:transform .15s;
-  }
-  .vend-wrap.open .vend-arrow{transform:translateY(-50%) rotate(180deg)}
-  .vend-dropdown{
-    position:absolute; z-index:30; left:0; right:0; top:calc(100% + 4px);
-    background:#fff; border:1.5px solid var(--orange);
-    border-radius:var(--r-sm); box-shadow:0 8px 28px rgba(18,31,58,.14);
-    max-height:230px; overflow-y:auto; display:none;
-  }
-  .vend-wrap.open .vend-dropdown{display:block; animation:fade .12s ease}
-  .vend-search{
-    position:sticky; top:0; padding:8px 10px; background:#fff;
-    border-bottom:1px solid var(--line);
-  }
-  .vend-search input{
-    font-size:13px; padding:7px 10px; border-radius:7px;
-    border:1.5px solid var(--line); width:100%; outline:none;
-    transition:border-color .12s;
-  }
-  .vend-search input:focus{border-color:var(--orange)}
-  .vend-option{
-    padding:9px 12px; cursor:pointer; font-size:14px;
-    transition:background .08s;
-  }
-  .vend-option:hover,.vend-option.focused{background:var(--bg)}
-  .vend-option.selected{background:rgba(226,137,42,.1); color:var(--orange-dk); font-weight:500}
-  .vend-none{padding:10px 12px; font-size:13px; color:var(--muted); text-align:center}
   .pill-count{font-family:var(--mono); font-size:12px; background:var(--bg); border:1px solid var(--line); padding:3px 10px; border-radius:999px; color:var(--muted)}
+  /* ---- Sub-abas do painel admin ---- */
+  .subtabs{display:flex; gap:2px; margin-bottom:20px; border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .subtab{appearance:none; background:none; border:0; border-bottom:2.5px solid transparent; margin-bottom:-1px; cursor:pointer; font-family:var(--display); font-weight:600; text-transform:uppercase; letter-spacing:.5px; font-size:14px; color:var(--muted); padding:10px 18px; transition:color .15s, border-color .15s}
+  .subtab:hover{color:var(--ink)}
+  .subtab.is-active{color:var(--ink); border-bottom-color:var(--orange)}
+  .inline-edit{padding:6px 10px !important; font-size:13px}
+  select.mini{width:auto; min-width:180px; padding-top:8px; padding-bottom:8px}
 
   /* ---------- Responsivo ---------- */
   @media (max-width: 920px){
@@ -403,6 +375,7 @@
     --ok-bg:#10312F;   --ok-tx:#76CFD0;
     --pend-bg:#36280F; --pend-tx:#F0B860;
     --rej-bg:#371917;  --rej-tx:#F0897C;
+    --dev-bg:#182A44;  --dev-tx:#84B4E6;
 
     --shadow:0 14px 38px rgba(0,0,0,.50);
     --shadow-sm:0 2px 10px rgba(0,0,0,.40);
@@ -412,13 +385,6 @@
   html[data-theme="dark"] input,
   html[data-theme="dark"] select,
   html[data-theme="dark"] textarea{ background-color:#0B1322; color:var(--ink); }
-  html[data-theme="dark"] .vend-input{ background-color:#0B1322; color:var(--ink); }
-  html[data-theme="dark"] .vend-dropdown{ background:#0F1729; border-color:var(--orange); }
-  html[data-theme="dark"] .vend-search{ background:#0F1729; border-bottom-color:var(--line); }
-  html[data-theme="dark"] .vend-search input{ background:#0B1322; color:var(--ink); }
-  html[data-theme="dark"] .vend-option:hover,
-  html[data-theme="dark"] .vend-option.focused{ background:rgba(255,255,255,.05); }
-  html[data-theme="dark"] .vend-option.selected{ background:rgba(226,137,42,.15); }
   html[data-theme="dark"] select{
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238B96AD' stroke-width='2' stroke-linecap='round'/></svg>");
   }
@@ -553,15 +519,7 @@
         </div>
         <div class="field col-5">
           <label>Vendedor <span class="req">*</span></label>
-          <div class="vend-wrap" id="vend_wrap_f">
-            <input type="text" class="vend-input" id="f_vendedor_display" placeholder="Selecione o vendedor…" readonly>
-            <input type="hidden" id="f_vendedor">
-            <svg class="vend-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            <div class="vend-dropdown" id="vend_drop_f">
-              <div class="vend-search"><input type="text" id="vend_search_f" placeholder="Buscar vendedor…" autocomplete="off"></div>
-              <div id="vend_list_f"></div>
-            </div>
-          </div>
+          <select id="f_vendedor"><option value="">Selecione a filial…</option></select>
         </div>
 
         <div class="field col-12">
@@ -629,6 +587,12 @@
     <!-- Conteúdo do painel -->
     <div id="adminContent" style="display:none">
 
+      <div class="subtabs">
+        <button class="subtab is-active" type="button" data-atab="descontos">Descontos</button>
+        <button class="subtab" type="button" data-atab="vendedores">Vendedores</button>
+      </div>
+
+      <div id="tab-descontos">
       <div class="stats" id="adminStats"></div>
 
       <div class="card" style="margin-bottom:18px">
@@ -648,6 +612,7 @@
               <option value="pendente">Pendente</option>
               <option value="aprovado">Aprovado</option>
               <option value="rejeitado">Rejeitado</option>
+              <option value="revisar">Devolvido</option>
             </select>
           </div>
           <div class="field">
@@ -695,6 +660,45 @@
           <div id="a_resumo"></div>
         </div>
       </div>
+      </div><!-- /#tab-descontos -->
+
+      <!-- ============ Aba: Cadastro de vendedores ============ -->
+      <div id="tab-vendedores" style="display:none">
+        <div class="card" style="margin-bottom:18px">
+          <p class="panel-title">Cadastrar vendedor</p>
+          <p class="panel-sub">Os vendedores cadastrados aqui aparecem para as filiais na hora de lançar um desconto.</p>
+          <div class="form-grid">
+            <div class="field col-6">
+              <label>Nome do vendedor <span class="req">*</span></label>
+              <input id="v_nome" type="text" placeholder="Nome do vendedor" autocomplete="off">
+            </div>
+            <div class="field col-3">
+              <label>Filial <span class="req">*</span></label>
+              <select id="v_filial"></select>
+            </div>
+            <div class="field col-3" style="justify-content:flex-end">
+              <button class="btn btn-primary" id="v_add" type="button">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+                Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap">
+            <div>
+              <p class="panel-title" style="margin:0">Vendedores cadastrados</p>
+              <p class="panel-sub" style="margin:2px 0 0">Inative quem saiu (preserva o histórico) ou exclua definitivamente.</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+              <select id="v_fltFilial" class="mini"><option value="">Todas as filiais</option></select>
+              <span class="pill-count" id="v_count">0</span>
+            </div>
+          </div>
+          <div id="v_list"></div>
+        </div>
+      </div>
 
     </div>
   </section>
@@ -718,23 +722,14 @@
         <div class="field col-3"><label>Frete (R$) <span class="req">*</span></label><div class="money-prefix"><span>R$</span><input id="e_frete" type="text" inputmode="decimal"></div></div>
         <div class="field col-12"><label>Cliente <span class="req">*</span></label><input id="e_cliente" type="text"></div>
         <div class="field col-6"><label>Transportadora <span class="req">*</span></label><input id="e_transp" type="text"></div>
-        <div class="field col-6"><label>Vendedor <span class="req">*</span></label>
-          <div class="vend-wrap" id="vend_wrap_e">
-            <input type="text" class="vend-input" id="e_vendedor_display" placeholder="Selecione o vendedor…" readonly>
-            <input type="hidden" id="e_vendedor">
-            <svg class="vend-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            <div class="vend-dropdown" id="vend_drop_e">
-              <div class="vend-search"><input type="text" id="vend_search_e" placeholder="Buscar vendedor…" autocomplete="off"></div>
-              <div id="vend_list_e"></div>
-            </div>
-          </div>
-        </div>
+        <div class="field col-6"><label>Vendedor <span class="req">*</span></label><input id="e_vendedor" type="text" list="dl_vendedores_all"><datalist id="dl_vendedores_all"></datalist></div>
         <div class="field col-8"><label>Motivo <span class="req">*</span></label><input id="e_motivo" type="text" list="dl_motivos"></div>
         <div class="field col-4"><label>Status</label>
           <select id="e_status">
             <option value="pendente">Pendente</option>
             <option value="aprovado">Aprovado</option>
             <option value="rejeitado">Rejeitado</option>
+            <option value="revisar">Devolvido</option>
           </select>
         </div>
       </div>
@@ -762,6 +757,30 @@
   </div>
 </div>
 
+<!-- ============ MODAL: DEVOLVER COM DÚVIDA ============ -->
+<div class="modal-overlay" id="devolverOverlay">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-head">
+      <h3>Devolver para a filial</h3>
+      <button class="icon-btn" id="devClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="panel-sub" style="margin-top:0">O lançamento volta para a filial revisar e reenviar. Deixe claro qual é a sua dúvida ou o que precisa ser ajustado.</p>
+      <p class="hint" id="dev_ctx" style="margin:0 0 12px; font-family:var(--mono)"></p>
+      <div class="field">
+        <label>Sua dúvida <span class="req">*</span></label>
+        <textarea id="dev_nota" rows="4" placeholder="Ex.: O valor do frete confere com a transportadora? A nota parece duplicada com a 12345."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="devCancel" type="button">Cancelar</button>
+      <button class="btn btn-primary" id="devSend" type="button">Devolver com a dúvida</button>
+    </div>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
 <script>
@@ -782,7 +801,7 @@ const ADMIN_PASSWORD    = 'mauer2026';   // <- troque por uma senha sua
 const FILIAIS = ['GO','MS','PR','MG','SC','BU','RP','SP','DF','CE','ES','PE','MT'];
 /* ================================================================ */
 
-const STATUS_LABEL = { pendente:'Pendente', aprovado:'Aprovado', rejeitado:'Rejeitado' };
+const STATUS_LABEL = { pendente:'Pendente', aprovado:'Aprovado', rejeitado:'Rejeitado', revisar:'Devolvido' };
 const isConfigured = !SUPABASE_URL.includes('SEU-PROJETO') && !SUPABASE_ANON_KEY.includes('SUA-CHAVE');
 
 let sb = null;
@@ -795,6 +814,10 @@ const state = {
   funcFilial: '',
   funcRows: [],
   all: [],
+  vendedores: [],
+  vendedoresLoaded: false,
+  venEditId: null,
+  devolverId: null,
   adminUnlocked: false,
   editingId: null,
   confirmResolve: null,
@@ -925,6 +948,24 @@ async function dbDelete(id){
   if (error) throw error;
 }
 
+async function dbVendedores(){
+  const { data, error } = await sb.from('vendedores').select('*').order('filial').order('nome');
+  if (error) throw error;
+  return data || [];
+}
+async function dbVendedorInsert(row){
+  const { data, error } = await sb.from('vendedores').insert(row).select().single();
+  if (error) throw error; return data;
+}
+async function dbVendedorUpdate(id, patch){
+  const { data, error } = await sb.from('vendedores').update(patch).eq('id', id).select().single();
+  if (error) throw error; return data;
+}
+async function dbVendedorDelete(id){
+  const { error } = await sb.from('vendedores').delete().eq('id', id);
+  if (error) throw error;
+}
+
 /* ================================================================
    FUNCIONÁRIO
    ================================================================ */
@@ -934,6 +975,8 @@ function fillFiliais(){
   $('#e_filial').innerHTML = FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
   const fopts = '<option value="">Todas</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
   $('#flt_filial').innerHTML = fopts;
+  $('#v_filial').innerHTML = '<option value="">Selecione…</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
+  $('#v_fltFilial').innerHTML = '<option value="">Todas as filiais</option>' + FILIAIS.map(f=>`<option value="${f}">${f}</option>`).join('');
 }
 
 function setFormEnabled(on){
@@ -947,10 +990,12 @@ async function onFilialChange(){
   state.funcFilial = f;
   setFormEnabled(!!f);
   $('#f_data').value = todayISO();
-  if(!f){ state.funcRows=[]; renderFuncList(); $('#f_count').textContent='0 lançamentos'; return; }
+  if(!f){ state.funcRows=[]; renderFuncList(); $('#f_count').textContent='0 lançamentos'; fillFuncVendedores(); return; }
   if(!sb){ return; }
   $('#f_list').innerHTML = '<div class="empty"><div class="spinner"></div></div>';
   try{
+    if(!state.vendedoresLoaded) await loadVendedores();
+    fillFuncVendedores();
     state.funcRows = await dbByFilial(f);
     renderFuncList();
   }catch(err){
@@ -960,6 +1005,27 @@ async function onFilialChange(){
   }
 }
 
+function refreshVendorDatalist(){ /* Vendedores agora vêm do cadastro (aba Vendedores). */ }
+
+function fillFuncVendedores(){
+  const sel = $('#f_vendedor'); const f = state.funcFilial;
+  if(!f){ sel.innerHTML = '<option value="">Selecione a filial…</option>'; sel.disabled = true; return; }
+  const list = [...new Set(state.vendedores.filter(v=>v.filial===f && v.ativo!==false).map(v=>cleanText(v.nome)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  if(!list.length){ sel.innerHTML = '<option value="">Nenhum vendedor cadastrado nesta filial</option>'; sel.disabled = true; return; }
+  sel.disabled = false;
+  sel.innerHTML = '<option value="">Selecione…</option>' + list.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+}
+
+async function loadVendedores(){
+  if(!sb) return;
+  try{
+    state.vendedores = await dbVendedores();
+    state.vendedoresLoaded = true;
+  }catch(err){
+    console.error('Falha ao carregar vendedores:', err);
+    state.vendedores = [];
+  }
+}
 
 function renderFuncList(){
   const rows = state.funcRows;
@@ -972,13 +1038,16 @@ function renderFuncList(){
   }
   const body = rows.map(r=>{
     const st = r.status || 'pendente';
-    const editable = st === 'pendente';
+    const editable = (st === 'pendente' || st === 'revisar');
     const acts = editable
       ? `<div class="row-actions">
            <button class="icon-btn" title="Editar" data-fedit="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
            <button class="icon-btn danger" title="Excluir" data-fdel="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2m-9 0v14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6"/></svg></button>
          </div>`
       : `<span class="hint" style="margin:0">Bloqueado</span>`;
+    const noteRow = (st==='revisar' && r.nota_admin)
+      ? `<tr class="note-row"><td colspan="7"><div class="note-callout"><b>Dúvida do administrador:</b> ${escapeHtml(r.nota_admin)}<span class="note-hint">Edite o lançamento e reenvie.</span></div></td></tr>`
+      : '';
     return `<tr>
       <td class="mono">${fmtDateBR(r.data)}</td>
       <td class="mono">${escapeHtml(r.nota)}</td>
@@ -987,7 +1056,7 @@ function renderFuncList(){
       <td class="num">${fmtMoney(r.frete)}</td>
       <td class="center"><span class="badge ${st}">${statusLabel(st)}</span></td>
       <td>${acts}</td>
-    </tr>`;
+    </tr>${noteRow}`;
   }).join('');
   $('#f_list').innerHTML = `<div class="table-wrap"><table>
     <thead><tr>
@@ -1016,9 +1085,7 @@ function validateEntry(v, prefix){
   const freteNum = parseMoney(v.frete);
   mark(prefix+'frete', isNaN(freteNum) || freteNum < 0);
   mark(prefix+'transp', !v.transportadora);
-  // vendedor: mark the display input (combobox) not the hidden
-  const vendEl = prefix==='#f_' ? $('#f_vendedor_display') : (prefix==='#e_' ? $('#e_vendedor_display') : $(prefix+'vendedor'));
-  if(vendEl){ vendEl.classList.toggle('invalid', !v.vendedor); if(!v.vendedor) ok=false; }
+  mark(prefix+'vendedor', !v.vendedor);
   mark(prefix+'motivo', !v.motivo);
   return { ok, freteNum };
 }
@@ -1048,6 +1115,7 @@ async function submitFuncForm(){
     const saved = await dbInsert(row);
     state.funcRows.unshift(saved);
     renderFuncList();
+    refreshVendorDatalist();
     clearFuncForm(false);
     toast('Lançamento enviado.', 'ok');
   }catch(err){
@@ -1061,7 +1129,6 @@ async function submitFuncForm(){
 function clearFuncForm(clearAll){
   ['#f_nota','#f_cliente','#f_frete','#f_transp','#f_vendedor','#f_motivo'].forEach(s=>{ $(s).value=''; $(s).classList.remove('invalid'); });
   $('#f_data').value = todayISO();
-  vendSetValue('f', '');
   if(clearAll){ $('#f_nota').focus(); }
 }
 
@@ -1073,8 +1140,10 @@ async function loadAdmin(){
   $('#a_resumo').innerHTML = '';
   try{
     state.all = await dbAll();
+    await loadVendedores();
     buildAdminFilterOptions();
     renderAdmin();
+    renderVendedores();
   }catch(err){
     console.error(err);
     $('#a_table').innerHTML = `<div class="empty"><h4>Erro ao carregar</h4><p>${escapeHtml(err.message||'Falha na conexão')}</p></div>`;
@@ -1087,6 +1156,9 @@ function buildAdminFilterOptions(){
   const cur = $('#flt_vendedor').value;
   $('#flt_vendedor').innerHTML = '<option value="">Todos</option>' + vendedores.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
   if(vendedores.includes(cur)) $('#flt_vendedor').value = cur;
+  const regNames = (state.vendedores||[]).map(v=>cleanText(v.nome));
+  const allNames = [...new Set([...vendedores, ...regNames].filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  $('#dl_vendedores_all').innerHTML = allNames.map(v=>`<option value="${escapeHtml(v)}"></option>`).join('');
 }
 
 function getFilteredAdmin(){
@@ -1122,12 +1194,14 @@ function renderStats(rows){
   const pend = rows.filter(r=>(r.status||'pendente')==='pendente').length;
   const aprov = rows.filter(r=>r.status==='aprovado');
   const rej = rows.filter(r=>r.status==='rejeitado').length;
+  const dev = rows.filter(r=>r.status==='revisar').length;
   const valor = aprov.reduce((s,r)=>s+(Number(r.frete)||0),0);
   $('#adminStats').innerHTML = `
     <div class="stat"><div class="lbl">Lançamentos</div><div class="val">${total}</div></div>
     <div class="stat"><div class="lbl">Pendentes</div><div class="val">${pend}</div></div>
     <div class="stat ok"><div class="lbl">Aprovados</div><div class="val">${aprov.length}</div></div>
     <div class="stat"><div class="lbl">Rejeitados</div><div class="val">${rej}</div></div>
+    <div class="stat dev"><div class="lbl">Devolvidos</div><div class="val">${dev}</div></div>
     <div class="stat accent"><div class="lbl">Valor aprovado</div><div class="val">${fmtMoney(valor)}</div></div>`;
 }
 
@@ -1156,10 +1230,12 @@ function renderAdminTable(rows){
           <option value="pendente"${st==='pendente'?' selected':''}>Pendente</option>
           <option value="aprovado"${st==='aprovado'?' selected':''}>Aprovado</option>
           <option value="rejeitado"${st==='rejeitado'?' selected':''}>Rejeitado</option>
+          <option value="revisar"${st==='revisar'?' selected':''}>Devolvido</option>
         </select>
       </td>
       <td>
         <div class="row-actions">
+          <button class="icon-btn" title="Devolver com dúvida" data-adevolver="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10L4 15l5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
           <button class="icon-btn" title="Editar" data-aedit="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
           <button class="icon-btn danger" title="Excluir" data-adel="${r.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2m-9 0v14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6"/></svg></button>
         </div>
@@ -1202,8 +1278,135 @@ function renderResumo(rows){
   </table></div>`;
 }
 
+/* ================================================================
+   VENDEDORES (cadastro)
+   ================================================================ */
+function switchAdminTab(tab){
+  $$('.subtab').forEach(b=>b.classList.toggle('is-active', b.getAttribute('data-atab')===tab));
+  $('#tab-descontos').style.display  = (tab==='descontos')  ? 'block' : 'none';
+  $('#tab-vendedores').style.display = (tab==='vendedores') ? 'block' : 'none';
+  if(tab==='vendedores') renderVendedores();
+}
+
+function renderVendedores(){
+  const flt = $('#v_fltFilial') ? $('#v_fltFilial').value : '';
+  let list = (state.vendedores||[]).slice();
+  if(flt) list = list.filter(v=>v.filial===flt);
+  list.sort((a,b)=> String(a.filial).localeCompare(String(b.filial)) || cleanText(a.nome).localeCompare(cleanText(b.nome)));
+  $('#v_count').textContent = `${list.length} ${list.length===1?'vendedor':'vendedores'}`;
+  if(!list.length){
+    $('#v_list').innerHTML = `<div class="empty">
+      <div class="em-ic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h4>Nenhum vendedor</h4><p>Cadastre o primeiro vendedor no formulário acima.</p></div>`;
+    return;
+  }
+  const icnSave   = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+  const icnCancel = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
+  const icnEdit   = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+  const icnPower  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>`;
+  const icnDel    = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2m-9 0v14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6"/></svg>`;
+  const body = list.map(v=>{
+    const ativo = v.ativo !== false;
+    if(state.venEditId === v.id){
+      return `<tr>
+        <td><input class="inline-edit" id="ve_nome_${v.id}" type="text" value="${escapeHtml(v.nome)}"></td>
+        <td class="center mono">${escapeHtml(v.filial)}</td>
+        <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
+        <td><div class="row-actions">
+          <button class="icon-btn" title="Salvar" data-vsave="${v.id}">${icnSave}</button>
+          <button class="icon-btn" title="Cancelar" data-vcancel="${v.id}">${icnCancel}</button>
+        </div></td>
+      </tr>`;
+    }
+    return `<tr>
+      <td>${escapeHtml(v.nome)}</td>
+      <td class="center mono">${escapeHtml(v.filial)}</td>
+      <td class="center"><span class="badge ${ativo?'aprovado':'rejeitado'}">${ativo?'Ativo':'Inativo'}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="Editar nome" data-vedit="${v.id}">${icnEdit}</button>
+        <button class="icon-btn" title="${ativo?'Inativar':'Ativar'}" data-vtoggle="${v.id}">${icnPower}</button>
+        <button class="icon-btn danger" title="Excluir" data-vdel="${v.id}">${icnDel}</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  $('#v_list').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Vendedor</th><th class="center">Filial</th><th class="center">Status</th><th>Ações</th></tr></thead>
+    <tbody>${body}</tbody></table></div>`;
+}
+
+async function addVendedor(){
+  if(!sb){ toast('Configure o Supabase para cadastrar.', 'err'); return; }
+  const nome = cleanText($('#v_nome').value);
+  const filial = $('#v_filial').value;
+  let ok = true;
+  $('#v_nome').classList.toggle('invalid', !nome); if(!nome) ok=false;
+  $('#v_filial').classList.toggle('invalid', !filial); if(!filial) ok=false;
+  if(!ok){ toast('Informe o nome e a filial do vendedor.', 'err'); return; }
+  const dup = (state.vendedores||[]).find(v=>v.filial===filial && normKey(v.nome)===normKey(nome));
+  if(dup){ toast('Esse vendedor já está cadastrado nesta filial.', 'err'); return; }
+  const btn = $('#v_add'); btn.disabled=true; btn.style.opacity='.7';
+  try{
+    const saved = await dbVendedorInsert({ nome, filial, ativo:true });
+    state.vendedores.push(saved);
+    $('#v_nome').value=''; $('#v_nome').classList.remove('invalid'); $('#v_nome').focus();
+    renderVendedores();
+    if(state.funcFilial===filial) fillFuncVendedores();
+    toast('Vendedor cadastrado.', 'ok');
+  }catch(err){
+    console.error(err);
+    if(err && (err.code==='42P01' || /does not exist/i.test(err.message||'')))
+      toast('Tabela de vendedores não encontrada. Rode o SQL de atualização no Supabase.', 'err', 6000);
+    else if(err && (err.code==='23505' || /duplicate|unique/i.test(err.message||'')))
+      toast('Esse vendedor já está cadastrado nesta filial.', 'err');
+    else
+      toast('Erro ao cadastrar: ' + (err.message||'tente novamente'), 'err');
+  }finally{ btn.disabled=false; btn.style.opacity='1'; }
+}
+
+async function toggleVendedor(id){
+  const v = (state.vendedores||[]).find(x=>x.id===id); if(!v) return;
+  const next = (v.ativo===false);
+  v.ativo = next; renderVendedores();
+  if(state.funcFilial===v.filial) fillFuncVendedores();
+  try{ await dbVendedorUpdate(id, { ativo: next }); toast(next?'Vendedor ativado.':'Vendedor inativado.', 'ok', 2000); }
+  catch(err){ v.ativo=!next; renderVendedores(); toast('Erro ao atualizar.', 'err'); }
+}
+
+function startEditVendedor(id){ state.venEditId = id; renderVendedores(); const el=$('#ve_nome_'+id); if(el){ el.focus(); el.select(); } }
+function cancelEditVendedor(){ state.venEditId = null; renderVendedores(); }
+
+async function saveEditVendedor(id){
+  const v = (state.vendedores||[]).find(x=>x.id===id); if(!v) return;
+  const el = $('#ve_nome_'+id); if(!el) return;
+  const nome = cleanText(el.value);
+  if(!nome){ toast('O nome não pode ficar vazio.', 'err'); return; }
+  const dup = (state.vendedores||[]).find(x=>x.id!==id && x.filial===v.filial && normKey(x.nome)===normKey(nome));
+  if(dup){ toast('Já existe um vendedor com esse nome nesta filial.', 'err'); return; }
+  try{
+    const saved = await dbVendedorUpdate(id, { nome });
+    Object.assign(v, saved);
+    state.venEditId = null; renderVendedores();
+    if(state.funcFilial===v.filial) fillFuncVendedores();
+    toast('Nome atualizado.', 'ok');
+  }catch(err){ console.error(err); toast('Erro ao salvar: ' + (err.message||'tente novamente'), 'err'); }
+}
+
+async function deleteVendedor(id){
+  const v = (state.vendedores||[]).find(x=>x.id===id); if(!v) return;
+  const go = await askConfirm(`Excluir o vendedor <strong>${escapeHtml(v.nome)}</strong> (${escapeHtml(v.filial)})?<br>Os lançamentos já enviados não são afetados.`, 'Excluir');
+  if(!go) return;
+  try{
+    await dbVendedorDelete(id);
+    state.vendedores = (state.vendedores||[]).filter(x=>x.id!==id);
+    renderVendedores();
+    if(state.funcFilial===v.filial) fillFuncVendedores();
+    toast('Vendedor excluído.', 'ok');
+  }catch(err){ console.error(err); toast('Erro ao excluir.', 'err'); }
+}
+
 /* ---------- Ações inline do admin ---------- */
 async function changeStatus(id, value){
+  if(value==='revisar'){ openDevolver(id); return; }
   const row = state.all.find(r=>r.id===id);
   const prev = row ? row.status : null;
   if(row) row.status = value;          // otimista
@@ -1229,14 +1432,14 @@ function openEdit(id){
   $('#e_frete').value = (Number(row.frete)||0).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('#e_cliente').value = row.cliente||'';
   $('#e_transp').value = row.transportadora||'';
-  vendSetValue('e', row.vendedor||'');
+  $('#e_vendedor').value = row.vendedor||'';
   $('#e_motivo').value = row.motivo||'';
   $('#e_status').value = row.status||'pendente';
   // funcionário não muda status nem filial
   const isFunc = $('#screen-func').classList.contains('is-active');
   $('#e_status').closest('.field').style.display = isFunc ? 'none' : 'flex';
   $('#e_filial').disabled = isFunc;
-  $$('#editOverlay .invalid').forEach(el=>el.classList.remove('invalid')); vendSetValue('e','');
+  $$('#editOverlay .invalid').forEach(el=>el.classList.remove('invalid'));
   $('#editOverlay').classList.add('is-open');
 }
 function closeEdit(){ $('#editOverlay').classList.remove('is-open'); state.editingId=null; }
@@ -1260,7 +1463,11 @@ async function saveEdit(){
     transportadora: v.transportadora, vendedor: v.vendedor, motivo: v.motivo,
   };
   const isFunc = $('#screen-func').classList.contains('is-active');
-  if(!isFunc){
+  const curRow = state.funcRows.find(r=>r.id===id) || state.all.find(r=>r.id===id);
+  const wasRevisar = !!(curRow && curRow.status==='revisar');
+  if(isFunc){
+    if(wasRevisar){ patch.status='pendente'; patch.nota_admin=null; }   // reenvio para análise
+  } else {
     patch.filial = $('#e_filial').value;
     patch.status = $('#e_status').value;
   }
@@ -1272,9 +1479,14 @@ async function saveEdit(){
     const ia = state.all.findIndex(r=>r.id===id); if(ia>-1) state.all[ia] = saved;
     const ifr = state.funcRows.findIndex(r=>r.id===id); if(ifr>-1) state.funcRows[ifr] = saved;
     closeEdit();
-    if(isFunc){ renderFuncList(); refreshVendorDatalist(); }
-    else { buildAdminFilterOptions(); renderAdmin(); }
-    toast('Lançamento atualizado.', 'ok');
+    if(isFunc){
+      renderFuncList(); refreshVendorDatalist();
+      toast(wasRevisar ? 'Reenviado para análise.' : 'Lançamento atualizado.', 'ok');
+    } else {
+      buildAdminFilterOptions(); renderAdmin();
+      if(saved.status==='revisar' && !saved.nota_admin){ openDevolver(id); }
+      else { toast('Lançamento atualizado.', 'ok'); }
+    }
   }catch(err){
     console.error(err);
     toast('Erro ao salvar: ' + (err.message||'tente novamente'), 'err');
@@ -1299,6 +1511,49 @@ async function deleteRow(id, scope){
     console.error(err);
     toast('Erro ao excluir.', 'err');
   }
+}
+
+/* ================================================================
+   DEVOLVER PARA A FILIAL (com dúvida)
+   ================================================================ */
+function openDevolver(id){
+  const row = state.all.find(r=>r.id===id);
+  if(!row){ toast('Abra pelo painel para devolver.', 'err'); return; }
+  state.devolverId = id;
+  $('#dev_ctx').textContent = `Nota ${row.nota||''} · ${row.filial||''} · ${row.vendedor||''}`;
+  $('#dev_nota').value = row.nota_admin || '';
+  $('#dev_nota').classList.remove('invalid');
+  $('#devolverOverlay').classList.add('is-open');
+  setTimeout(()=>$('#dev_nota').focus(), 80);
+}
+function closeDevolver(reset){
+  $('#devolverOverlay').classList.remove('is-open');
+  state.devolverId = null;
+  if(reset) renderAdmin();   // desfaz a seleção "Devolvido" no select da linha, se veio de lá
+}
+async function sendDevolver(){
+  const id = state.devolverId; if(!id) return;
+  const nota = cleanText($('#dev_nota').value);
+  if(!nota){ $('#dev_nota').classList.add('invalid'); toast('Escreva a sua dúvida para devolver.', 'err'); return; }
+  const row = state.all.find(r=>r.id===id);
+  const prevStatus = row ? row.status : 'pendente';
+  const prevNota = row ? row.nota_admin : null;
+  if(row){ row.status='revisar'; row.nota_admin=nota; }
+  const btn = $('#devSend'); btn.disabled=true; btn.style.opacity='.7';
+  try{
+    await dbUpdate(id, { status:'revisar', nota_admin: nota });
+    closeDevolver(false);
+    buildAdminFilterOptions(); renderAdmin();
+    toast('Devolvido para a filial com a sua dúvida.', 'ok');
+  }catch(err){
+    if(row){ row.status=prevStatus; row.nota_admin=prevNota; }
+    renderAdmin();
+    console.error(err);
+    if(err && (err.code==='PGRST204' || err.code==='42703' || /nota_admin/i.test(err.message||'')))
+      toast('Falta a coluna "nota_admin" no banco. Rode o ALTER no Supabase.', 'err', 6000);
+    else
+      toast('Erro ao devolver: ' + (err.message||'tente novamente'), 'err');
+  }finally{ btn.disabled=false; btn.style.opacity='1'; }
 }
 
 /* ================================================================
@@ -1368,106 +1623,8 @@ function exportExcel(){
 /* ================================================================
    EVENTOS
    ================================================================ */
-/* ================================================================
-   VENDEDOR COMBOBOX
-   ================================================================ */
-const VENDEDORES = [
-  'Alex Oliveira','Ana Cristina Pires Viana','Anderson José Bittencourt Moraes',
-  'Andreia Ribeiro da Matta','Bruna Roberta Bicalho de Oliveira','Chaves',
-  'Davi Almeida Silva','Dayanne Vitoria de Vargas Correia','Debora Fitz',
-  'Eder Gomes de Souza','Eduardo Marcos Aguiar Junior','Edvaldo Barbosa De Carvalho',
-  'Elton Paulo Bento','Filipe Barreiros Pego','Gabriela Nassif Dias Ribeiro',
-  'Glauber Santos','Gustavo Ferreira Costa','Helio Martins Deziderio',
-  'Hernani Batista Quinário','Heverton Felipe Bello Teixeira Chaves','Inativos',
-  'Jeremias De Souza Biliatto Junior','Joaquim Lopes Rodrigues Filho',
-  'Josiane Faria Santos de Castro','Kalinca Rafaela Cruz Menegati',
-  'Kamila Ferreira Pontes','Kamila Santos Natividade',
-  'Kaue Alinson Pereira De Toledo Arantes','Laleska Olivieri Araújo',
-  'Leonardo de Souza Ferreira','Lincoln Garcia Dos Reis','Luciane Carvalho',
-  'Marcello Fernando Aragão','Marcelo Pereira Lima','Marco Antonio de Souza Ferreira',
-  'Marcos Vinicius Texeira Chaves','Nayara Regina Nunes Brunes',
-  'Patrick Emanuel Loro Da Silva','Pedro Fernandes','Pedro Guilherme Salvador Muniz',
-  'Richard Sanches','Rodrigo Aparecido Garcia','Rodrigo Vitica','Rosangela Selini',
-  'Rutchelly Cabral de Queiroz','Tainara Macarini','Telis Cardoso Galhardo de Figueiredo',
-  'Thane Oliveira','Thiago Henrique Dos Santos','Tiago Barbosa Favaro',
-  'Tuany Trindade','Vinicius Henrique Gualberto Dutra','William Kimura Ferretti'
-];
-
-function vendRenderList(suffix, query){
-  const list = $('#vend_list_'+suffix);
-  const q = (query||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  const current = $('#'+suffix+'_vendedor').value;
-  const filtered = VENDEDORES.filter(n=>{
-    const norm = n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    return norm.includes(q);
-  });
-  if(!filtered.length){
-    list.innerHTML = '<div class="vend-none">Nenhum vendedor encontrado</div>';
-    return;
-  }
-  list.innerHTML = filtered.map(n=>{
-    const sel = n===current ? ' selected' : '';
-    const hl = q ? n.replace(new RegExp('('+escapeRegex(query)+')', 'gi'), '<b>$1</b>') : n;
-    return `<div class="vend-option${sel}" data-val="${escapeHtml(n)}">${hl}</div>`;
-  }).join('');
-}
-
-function escapeRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
-
-function vendOpen(suffix){
-  const wrap = $('#vend_wrap_'+suffix);
-  wrap.classList.add('open');
-  const inp = $('#'+suffix+'_vendedor_display');
-  inp.classList.add('open');
-  const srch = $('#vend_search_'+suffix);
-  srch.value = '';
-  vendRenderList(suffix, '');
-  setTimeout(()=>srch.focus(), 50);
-}
-
-function vendClose(suffix){
-  const wrap = $('#vend_wrap_'+suffix);
-  wrap.classList.remove('open');
-  $('#'+suffix+'_vendedor_display').classList.remove('open');
-}
-
-function vendSetValue(suffix, val){
-  $('#'+suffix+'_vendedor').value = val;
-  const disp = $('#'+suffix+'_vendedor_display');
-  disp.value = val || '';
-  // remove invalid if a value is picked
-  if(val) disp.classList.remove('invalid');
-}
-
-function vendBind(suffix){
-  const wrap = $('#vend_wrap_'+suffix);
-  const display = $('#'+suffix+'_vendedor_display');
-  const drop = $('#vend_drop_'+suffix);
-  const search = $('#vend_search_'+suffix);
-  const list = $('#vend_list_'+suffix);
-
-  display.addEventListener('click', (e)=>{
-    e.stopPropagation();
-    if(wrap.classList.contains('open')){ vendClose(suffix); } else { vendOpen(suffix); }
-  });
-  search.addEventListener('click', e=>e.stopPropagation());
-  search.addEventListener('input', ()=>vendRenderList(suffix, search.value));
-  list.addEventListener('click', e=>{
-    const opt = e.target.closest('[data-val]');
-    if(!opt) return;
-    vendSetValue(suffix, opt.getAttribute('data-val'));
-    vendClose(suffix);
-  });
-  drop.addEventListener('mousedown', e=>e.preventDefault()); // keep focus on search
-}
-
-// Close on outside click
-document.addEventListener('click', ()=>{
-  ['f','e'].forEach(s=>{ if($('#vend_wrap_'+s)) vendClose(s); });
-});
-
 function bind(){
-  $('#goFunc').addEventListener('click', ()=>{ showScreen('screen-func','Funcionário'); fillFiliais(); $('#f_data').value=todayISO(); });
+  $('#goFunc').addEventListener('click', ()=>{ showScreen('screen-func','Funcionário'); fillFiliais(); $('#f_data').value=todayISO(); if(sb && !state.vendedoresLoaded) loadVendedores(); fillFuncVendedores(); });
   $('#goAdmin').addEventListener('click', ()=>{
     showScreen('screen-admin','Administrador');
     if(state.adminUnlocked){ $('#adminGate').style.display='none'; $('#adminContent').style.display='block'; loadAdmin(); }
@@ -1501,12 +1658,33 @@ function bind(){
   $('#adminReload').addEventListener('click', loadAdmin);
   $('#btnExport').addEventListener('click', exportExcel);
 
+  // Sub-abas do painel
+  $$('.subtab').forEach(b=>b.addEventListener('click', ()=>switchAdminTab(b.getAttribute('data-atab'))));
+
+  // Vendedores (cadastro)
+  $('#v_add').addEventListener('click', addVendedor);
+  $('#v_nome').addEventListener('keydown', e=>{ if(e.key==='Enter') addVendedor(); });
+  $('#v_fltFilial').addEventListener('change', renderVendedores);
+  $('#v_list').addEventListener('click', e=>{
+    const ed=e.target.closest('[data-vedit]');   if(ed){ startEditVendedor(ed.getAttribute('data-vedit')); return; }
+    const sv=e.target.closest('[data-vsave]');   if(sv){ saveEditVendedor(sv.getAttribute('data-vsave')); return; }
+    const cn=e.target.closest('[data-vcancel]'); if(cn){ cancelEditVendedor(); return; }
+    const tg=e.target.closest('[data-vtoggle]'); if(tg){ toggleVendedor(tg.getAttribute('data-vtoggle')); return; }
+    const dl=e.target.closest('[data-vdel]');    if(dl){ deleteVendedor(dl.getAttribute('data-vdel')); return; }
+  });
+  $('#v_list').addEventListener('keydown', e=>{
+    const inp = e.target.closest('.inline-edit'); if(!inp) return;
+    if(e.key==='Enter'){ saveEditVendedor(inp.id.replace('ve_nome_','')); }
+    else if(e.key==='Escape'){ cancelEditVendedor(); }
+  });
+
   // Admin tabela (delegação)
   $('#a_table').addEventListener('change', e=>{
     const sel = e.target.closest('[data-status]');
     if(sel){ changeStatus(sel.getAttribute('data-status'), sel.value); }
   });
   $('#a_table').addEventListener('click', e=>{
+    const dv = e.target.closest('[data-adevolver]'); if(dv){ openDevolver(dv.getAttribute('data-adevolver')); return; }
     const ed = e.target.closest('[data-aedit]'); if(ed){ openEdit(ed.getAttribute('data-aedit')); return; }
     const dl = e.target.closest('[data-adel]'); if(dl){ deleteRow(dl.getAttribute('data-adel'),'admin'); return; }
   });
@@ -1516,7 +1694,11 @@ function bind(){
   $('#editCancel').addEventListener('click', closeEdit);
   $('#editSave').addEventListener('click', saveEdit);
   $('#editOverlay').addEventListener('click', e=>{ if(e.target===$('#editOverlay')) closeEdit(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeEdit(); $('#confirmOverlay').classList.remove('is-open'); } });
+  $('#devClose').addEventListener('click', ()=>closeDevolver(true));
+  $('#devCancel').addEventListener('click', ()=>closeDevolver(true));
+  $('#devSend').addEventListener('click', sendDevolver);
+  $('#devolverOverlay').addEventListener('click', e=>{ if(e.target===$('#devolverOverlay')) closeDevolver(true); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeEdit(); $('#confirmOverlay').classList.remove('is-open'); if($('#devolverOverlay').classList.contains('is-open')) closeDevolver(true); } });
 }
 
 function maskMoney(el){
@@ -1544,8 +1726,6 @@ function init(){
   initTheme();
   fillFiliais();
   bind();
-  vendBind('f');
-  vendBind('e');
   if(!isConfigured){ $('#configBanner').style.display='block'; }
 }
 init();
@@ -1568,6 +1748,7 @@ create table if not exists public.descontos (
   motivo       text        not null,
   status       text        not null default 'pendente',
   enviado_por  text,
+  nota_admin   text,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
@@ -1585,6 +1766,32 @@ create policy "acesso_app_descontos"
 
 -- índice para acelerar filtros por filial
 create index if not exists idx_descontos_filial on public.descontos (filial);
+
+-- Devolução com dúvida: para bancos criados antes desta versão, adicione a coluna:
+alter table public.descontos add column if not exists nota_admin text;
+
+
+-- ===== Cadastro de vendedores =====
+create table if not exists public.vendedores (
+  id          uuid primary key default gen_random_uuid(),
+  nome        text        not null,
+  filial      text        not null,
+  ativo       boolean     not null default true,
+  created_at  timestamptz not null default now()
+);
+
+alter table public.vendedores enable row level security;
+
+create policy "acesso_app_vendedores"
+  on public.vendedores
+  for all
+  to anon
+  using (true)
+  with check (true);
+
+-- evita vendedor duplicado na mesma filial (ignora maiúsculas/minúsculas)
+create unique index if not exists uq_vendedores_filial_nome
+  on public.vendedores (filial, lower(nome));
 
 =====================================================================
 -->
