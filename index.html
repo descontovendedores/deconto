@@ -1423,18 +1423,35 @@ async function importVendedoresExcel(file){
 
     if(!uniqueNew.length){ toast('Nenhum vendedor novo encontrado na planilha.', 'info'); return; }
 
-    let ok=0, fail=0, firstErr='';
-    for(const nome of uniqueNew){
-      try{
-        const saved = await dbVendedorInsert({ nome, ativo:true });
-        state.vendedores.push(saved);
-        ok++;
-      }catch(err){ fail++; if(!firstErr) firstErr = (err && err.message) || 'erro desconhecido'; }
+    let ok=0, fail=0, firstErr='', netErr=false;
+    const isNet = e => e && (e.name==='TypeError' || /failed to fetch|networkerror|load failed/i.test(e.message||''));
+    // 1) Tenta enviar em lotes (1 requisição por lote, em vez de 1 por vendedor)
+    const CHUNK = 200;
+    for(let i=0;i<uniqueNew.length;i+=CHUNK){
+      const lote = uniqueNew.slice(i,i+CHUNK).map(nome=>({ nome, ativo:true }));
+      let res;
+      try{ res = await sb.from('vendedores').insert(lote).select(); }
+      catch(e){ res = { error:e }; }
+      if(!res.error){ (res.data||[]).forEach(v=>state.vendedores.push(v)); ok += (res.data||[]).length; continue; }
+      if(isNet(res.error)){ netErr=true; fail += lote.length; if(!firstErr) firstErr=res.error.message; break; }
+      // 2) Se o lote falhou (ex.: duplicado), envia um a um para aproveitar os válidos
+      for(const row of lote){
+        try{ const saved = await dbVendedorInsert(row); state.vendedores.push(saved); ok++; }
+        catch(err){
+          if(isNet(err)){ netErr=true; }
+          if(err && (err.code==='23505' || /duplicate|unique/i.test(err.message||''))){ fail++; continue; }
+          fail++; if(!firstErr) firstErr = (err && err.message) || 'erro desconhecido';
+          if(netErr) break;
+        }
+      }
+      if(netErr) break;
     }
     renderVendedores();
     fillFuncVendedores();
-    if(ok===0 && fail>0){
-      toast(`Falha ao importar: ${firstErr}`, 'err', 8000);
+    if(netErr){
+      toast('Sem conexão com o Supabase (Failed to fetch). Verifique a internet/firewall da rede ou se o projeto Supabase está pausado. '+(ok?`${ok} importado(s) antes da falha.`:''), 'err', 10000);
+    } else if(ok===0 && fail>0){
+      toast(firstErr ? `Falha ao importar: ${firstErr}` : 'Todos os nomes da planilha já estavam cadastrados.', firstErr?'err':'info', 8000);
     } else {
       toast(`${ok} vendedor(es) importado(s)${fail?`, ${fail} ignorado(s)`:''}.`, 'ok');
     }
